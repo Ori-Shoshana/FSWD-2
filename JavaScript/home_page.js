@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const logoutButton = document.getElementById('logout-button');
   logoutButton.addEventListener('click', () => {
       localStorage.removeItem(LOGGED_IN_USER_KEY);
-      window.location.href = 'login.html';
+      window.location.href = '/index.html';
   });
 
   const quizButton = document.getElementById('quiz-button');
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (loggedInUser) {
       document.getElementById('user-name').textContent = loggedInUser;
   } else {
-      window.location.href = 'login.html';
+      window.location.href = '/index.html';
   }
 
   // Burger button logic
