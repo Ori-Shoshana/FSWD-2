@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const motionButton = document.getElementById('motion-button');
   motionButton.addEventListener('click', () => {
-      window.location.href = 'motion_game.html';
+      window.location.href = 'motoin_game.html';
   });
 
   const profileButton = document.getElementById('profile-button');
