@@ -1,86 +1,103 @@
-/* Main Page Styling */
-#main-page {
+/* עיצוב כללי */
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background: linear-gradient(135deg, #c3ec52, #0ba29d);
+  color: #333;
   text-align: center;
-}
-
-.menu {
+  height: 100vh;
   display: flex;
-  gap: 20px;
-  margin-top: 20px;
-}
-
-.menu button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  background-color: #28a745;
-  color: white;
-  cursor: pointer;
-}
-
-.menu button:hover {
-  background-color: #218838;
-}
-
-/* User Info */
-#user-info {
-  margin-top: 30px;
-  font-size: 1.2em;
-  color: #555;
-}
-
-#games-layout {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-  margin-top: 20px;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  width: 100%;
-  max-width: 800px;
-  margin-left: auto;
-  margin-right: auto;
+  justify-content: center;
+  overflow-x: hidden; /* מניעת גלילה אופקית */
 }
 
-/* Sidebar Styling */
 .sidebar {
   position: fixed;
-  top: 20%;
-  right: -250px;
+  top: 3;
+  right: -250px; /* Sidebar מתחיל מחוץ למסך */
   height: auto;
+  width: auto; /* Fixed width for the sidebar */
+
   background-color: #333;
   color: white;
   overflow-y: auto;
-  transition: right 0.3s ease;
-  padding: 10px;
+  padding: 20px;
+  transition: right 0.3s ease; /* מעבר חלק לפתיחה/סגירה */
   display: flex;
-  flex-direction: column;
-  gap: 10px;
   transform: translateY(-50%);
+  z-index: 10; /* Ensure sidebar is above other elements */
 }
 
-.sidebar button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
+/* כותרת */
+header h1 {
+  font-size: 3em;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* תפריט מרכזי */
+.menu {
+  display: flex;
+  gap: 20px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.menu button {
+  padding: 15px 30px;
+  font-size: 18px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
+  background-color: #4CAF50;
+  color: white;
   cursor: pointer;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
 }
 
-.sidebar button:hover {
-  background-color: #0056b3;
+.menu button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+/* פרטי משתמש */
+#user-info {
+  margin-top: 20px;
+  font-size: 1.2em;
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 /* Burger Button Styling */
 .burger-button {
+  position: fixed;
+  top: 0px;
+  right: 20px;
   font-size: 24px;
   background: none;
+  border: none;
   color: white;
+  cursor: pointer;
+  z-index: 20; /* כפתור מעל תפריט הצד */
+}
+
+.sidebar button {
+  background: none;
+  color: white;
+  border: 1px solid #555;
+  padding: 10px;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-.burger-button:hover {
+.sidebar button:hover {
   background-color: #555;
+}
+
+.burger-button:hover {
+  color: #ddd;
   transition: 0.6s;
 }
