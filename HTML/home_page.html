@@ -6,33 +6,32 @@
     <title>Home Page</title>
     <link rel="stylesheet" href="\styles.css">
     <link rel="stylesheet" href="\CSS\home_page.css">
-    <script src="\JavaScript\home_page.js"></script>
+    <script src="\JavaScript\home_page.js" defer></script>
 </head>
 <body>
-
     <header>
-        <h1>Home Page</h1>
+        <h1>Welcome to the Game Zone</h1>
         <button id="burger-button" class="burger-button">&#9776;</button>
     </header>
 
+    <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <button id="profile-button">Profile</button>
         <button id="settings-button">Settings</button>
         <button id="logout-button">Logout</button>
-        <!-- Add more buttons or links as needed -->
     </div>
 
-    <!-- Main Page -->
-    <div id="main-page" class="page">
-        <h1>Welcome, <span id="user-name"></span></h1>
-        <div id="games-layout" class="menu">
-            <button id="quiz-button">Quiz Games</button>
-            <button id="motion-button">Motion Games</button>
-        </div>
-        <div id="user-info">
-            <p>Total Score: <span id="user-score">0</span></p>
-            <p>Last Played: <span id="last-played">None</span></p>
-        </div>
+    <!-- Main Content -->
+    <div class="menu">
+        <button id="quiz-button">🎯 Quiz Games</button>
+        <button id="motion-button">🏃 Motion Games</button>
+    </div>
+
+    <!-- User Info -->
+    <div id="user-info">
+        <h2 id="user-name">Guest</h2> <!-- Added username here -->
+        <p>Total Score: <span id="user-score">0</span></p>
+        <p>Last Played: <span id="last-played">None</span></p>
     </div>
 </body>
 </html>
