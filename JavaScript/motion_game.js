@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const platforms = document.querySelectorAll(".platform");
+  const spikes = document.querySelectorAll(".spike");
 
   function getPlatformBelow() {
     const playerRect = player.getBoundingClientRect();
@@ -90,6 +91,42 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  function checkSpikeProximity() {
+    const playerRect = player.getBoundingClientRect();
+    
+    spikes.forEach(spike => {
+      const spikeRect = spike.getBoundingClientRect();
+      const proximity = 50; // Distance within which the spike will pop up
+      const spikespeed = 5; // Speed at which the spike moves
+      
+      // Move the spike down
+      spike.style.bottom = `${parseInt(spike.style.bottom) + spikespeed}px`;
+      if (parseInt(spike.style.bottom) > gameContainer.clientHeight) {
+        spike.style.bottom = `${-spikeRect.height}px`;
+        spike.style.left = `${Math.random() * (gameContainer.clientWidth - spikeRect.width)}px`;
+      }
+
+      // Check if player is within proximity of the spike
+      if (Math.abs(playerRect.left - spikeRect.left) < proximity && Math.abs(playerRect.bottom - spikeRect.bottom) < proximity) {
+        spike.style.visibility = 'visible'; // Show the spike
+        // Check if player is colliding with the spike
+        if (playerRect.left < spikeRect.right && playerRect.right > spikeRect.left &&
+            playerRect.top < spikeRect.bottom && playerRect.bottom > spikeRect.top) {
+          resetPlayer(); // Reset player position
+        }
+      } else {
+        //spike.style.visibility = 'hidden'; // Hide the spike
+      }
+    });
+  }
+
+  function resetPlayer() {
+    player.style.bottom = `${gameContainer.clientHeight / 2}px`;
+    player.style.left = "50px";
+    isJumping = false;
+    velocity = 0;
+  }
+
   function gameLoop() {
     // Handle horizontal movement
     if (keys["ArrowLeft"]) {
@@ -151,12 +188,12 @@ document.addEventListener("DOMContentLoaded", () => {
       velocity = 0;
     }
 
+    // Check for spike proximity
+    checkSpikeProximity();
+
     requestAnimationFrame(gameLoop);
   }
 
-  // Initialize player position
-  player.style.bottom = `${gameContainer.clientHeight / 2}px`;
-  player.style.left = "50px";
-
+  resetPlayer();
   gameLoop();
 });
