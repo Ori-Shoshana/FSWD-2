@@ -26,13 +26,26 @@ body {
   z-index: 1;
 }
 
+/* Add this CSS to your existing CSS file */
+
+@keyframes spin {
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
+}
+
 .coin {
   position: absolute;
-  width: calc(1vh + 1vw);
-  height: calc(1vh + 1vw);
+  width: 2vw; /* Width relative to the viewport width */
+  height: 2vw; /* Height relative to the viewport width */
   background-color: gold;
   border-radius: 50%;
   box-shadow: 0 0 10px gold;
+  animation: spin 2s linear infinite; /* Add spinning animation */
+}
+
+@keyframes coinPickup {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0); opacity: 0; }
 }
 
 /* a spike is a pointy obstacle */
@@ -49,7 +62,7 @@ body {
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-3.3vw);
+    transform: translateY(-3.3vh);
   }
 }
   

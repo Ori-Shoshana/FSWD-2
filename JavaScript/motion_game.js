@@ -5,23 +5,31 @@ document.addEventListener("DOMContentLoaded", () => {
   const jumpVelocity = 10;
   const moveSpeed = 5;
   let isJumping = false;
+  let isFalling = false;
   let velocity = 0;
   let keys = {};
   let currentLevel = 0;
   let hearts = 3;
-
+  let score = 0;
 
   const levels = [
     {
       // Level 1
       platforms: [
         { bottom: "70%", left: "0", width: "100%", height: "30vh" },
-        { bottom: "0%", right: "0", width: "calc(30% + 10vw)", height: "45vh" },
-        { bottom: "0%", left: "0", width: "calc(30% + 10vw)", height: "45vh" },
+        { bottom: "0%", right: "0", width: "43vw", height: "45vh" },
+        { bottom: "0%", left: "0", width: "43vw", height: "45vh" },
+        {
+          bottom: "0%",
+          left: "43vw",
+          width: "35vh",
+          height: "45vh",
+          id: "trick",
+          border: "1px solid transparent",
+          borderTop: "1px solid darkred",
+        },
       ],
-      spikes: [
-        
-      ],
+      spikes: [],
       coins: [
         { bottom: "50vh", left: "30vw" },
         { bottom: "50vh", left: "40vw" },
@@ -75,6 +83,10 @@ document.addEventListener("DOMContentLoaded", () => {
     level.platforms.forEach((platform) => {
       const platformElement = document.createElement("div");
       platformElement.className = "platform";
+      if (platform.id) {
+        platformElement.id = platform.id;
+        platformElement.style.visibility = "visible"; // Reset visibility
+      }
       Object.assign(platformElement.style, platform);
       gameContainer.appendChild(platformElement);
     });
@@ -99,17 +111,35 @@ document.addEventListener("DOMContentLoaded", () => {
     gameContainer.appendChild(endDoorElement);
   }
 
-  function die(cuase) {
+  function die(cause) {
     hearts--;
     if (hearts > 0) {
       loadLevel(currentLevel);
-      resetPlayer(cuase);
+      resetPlayer(cause);
     } else {
       alert("Game Over!");
-      resetPlayer(cuase);
+      resetPlayer(cause);
       hearts = 3;
       currentLevel = 0;
       loadLevel(currentLevel);
+    }
+  }
+
+  function trick() {
+    const trick = document.getElementById("trick");
+    if (trick) {
+      const playerRect = player.getBoundingClientRect();
+      const trickRect = trick.getBoundingClientRect();
+      const proximityX = 4; // Horizontal proximity
+      const proximityY = 100; // Vertical proximity
+      if (
+        (Math.abs(playerRect.right - trickRect.left) < proximityX ||
+        Math.abs(playerRect.left - trickRect.right) < proximityX) &&
+        Math.abs(playerRect.bottom - trickRect.top) < proximityY
+      ) {
+          trick.style.visibility = "hidden";
+          trick.style.width = "0";
+      }
     }
   }
 
@@ -237,12 +267,43 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  function resetPlayer(cuase = null) {
+  function resetPlayer(cause = null) {
     player.style.bottom = `${gameContainer.clientHeight / 2}px`;
     player.style.left = "50px";
     isJumping = false;
+    isFalling = false;
     velocity = 0;
     keys = {};
+  }
+
+  function pickCoin(coinElement) {
+    coinElement.style.animation = "coinPickup 0.5s forwards";
+    const audio = new Audio("/Media/mixkit-coins-sound-2003.wav");
+    audio.play();
+    setTimeout(() => {
+      coinElement.remove();
+    }, 500);
+    score++;
+    console.log("Score: ", score);
+  }
+
+  function checkCoinProximity() {
+    const playerRect = player.getBoundingClientRect();
+    const coins = document.querySelectorAll(".coin");
+
+    coins.forEach((coin) => {
+      const coinRect = coin.getBoundingClientRect();
+      const proximity = 40;
+
+      if (
+        playerRect.left < coinRect.right &&
+        playerRect.right > coinRect.left &&
+        playerRect.top < coinRect.bottom &&
+        playerRect.bottom > coinRect.top
+      ) {
+        pickCoin(coin);
+      }
+    });
   }
 
   function gameLoop() {
@@ -261,7 +322,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    if ((keys["ArrowUp"] || keys["Space"]) && !isJumping) {
+    if ((keys["ArrowUp"] || keys["Space"]) && !isJumping && !isFalling) {
       isJumping = true;
       velocity = jumpVelocity;
     }
@@ -280,7 +341,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const platformRect = platformBelow.getBoundingClientRect();
         newBottom = gameContainer.clientHeight - platformRect.top;
         isJumping = false;
+        isFalling = false;
         velocity = 0;
+      } else {
+        isFalling = true;
       }
     } else if (velocity > 0) {
       if (platformAbove && distanceAbove <= Math.abs(velocity)) {
@@ -304,6 +368,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     checkSpikeProximity();
+    checkCoinProximity();
 
     const endDoor = document.querySelector(".end_door");
     const endDoorRect = endDoor.getBoundingClientRect();
@@ -316,6 +381,8 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
       nextLevel();
     }
+
+    trick();
 
     if (playerRect.top > gameContainer.clientHeight) {
       die("fall");
