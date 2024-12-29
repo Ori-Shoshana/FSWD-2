@@ -9,11 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = '/index.html';
     });
 
-    // Navigation buttons
     const quizButton = document.getElementById('quiz-button');
     quizButton.addEventListener('click', () => {
         window.location.href = 'quiz_game.html';
     });
+
 
     const motionButton = document.getElementById('motion-button');
     motionButton.addEventListener('click', () => {
