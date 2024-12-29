@@ -16,7 +16,7 @@ body {
 .sidebar {
   position: fixed;
   top: 3;
-  top: 11%; /* תחילת הסרגל מלמעלה */
+  top: 11%; /* location of the sidebar */
   right: -250px; /* Sidebar מתחיל מחוץ למסך */
   height: auto;
   width: auto; /* Fixed width for the sidebar */

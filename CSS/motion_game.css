@@ -13,23 +13,23 @@ body {
 
 #player {
   position: absolute;
-  bottom: 20px;
-  left: 50px;
-  width: 30px;
-  height: 30px;
+  width: calc(2vh + 2vw);
+  height: calc(2vh + 2vw);
   background-color: blue;
+  z-index: 1;
 }
 
 .platform {
   position: absolute;
-  background-color: darkred;
+  background-color: ghostwhite;
   border: 1px solid darkred;
+  z-index: 1;
 }
 
 .coin {
   position: absolute;
-  width: 20px;
-  height: 20px;
+  width: calc(1vh + 1vw);
+  height: calc(1vh + 1vw);
   background-color: gold;
   border-radius: 50%;
   box-shadow: 0 0 10px gold;
@@ -38,21 +38,39 @@ body {
 /* a spike is a pointy obstacle */
 .spike {
   position: absolute;
-  width: 0;
-  height: 0;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   border-bottom: 20px solid rgb(0, 0, 0);
+  z-index: 0;
 }
+
+@keyframes spikeAnimation {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-3.3vw);
+  }
+}
+  
 
 
 .end_door {
   position: absolute;
-  width: 50px;
-  height: 60px;
-  background: linear-gradient(to bottom, lightblue, gold);
+  width: calc(3vh + 3vw);
+  height: calc(4vh + 4vw);
+  background: linear-gradient(to bottom, gold ,linen ,lightblue);
   box-shadow: 0 0 20px 5px #ffd700; /* Glowing light effect */
   border-top-right-radius: 50%;
   border-top-left-radius: 50%;
   border: 10px solid darkblue;
+  z-index: 0;
+}
+
+.hearts {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 10px;
+  z-index: 2;
 }
