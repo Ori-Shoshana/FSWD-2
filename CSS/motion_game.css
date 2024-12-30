@@ -26,6 +26,15 @@ body {
   z-index: 1;
 }
 
+@keyframes movingPlatform {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10vh);
+  }
+}
+
 /* Add this CSS to your existing CSS file */
 
 @keyframes spin {
@@ -85,5 +94,15 @@ body {
   top: 10px;
   left: 10px;
   width: 10px;
+  z-index: 2;
+}
+
+#score {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  font-weight: bold;
+  color: black;
   z-index: 2;
 }
