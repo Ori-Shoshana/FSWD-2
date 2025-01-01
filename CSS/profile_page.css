@@ -1,0 +1,64 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f7f7f7; /* Light grey background */
+}
+
+header {
+  background-color: #4a90e2; /* Gentle blue */
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+}
+
+main {
+  padding: 2rem;
+}
+
+.profile-details, .game-stats {
+  background-color: #ffffff; /* White background */
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+th, td {
+  padding: 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+tr:nth-child(odd) {
+  background-color: #f2f2f2; /* Light grey for odd rows */
+}
+
+tr:nth-child(even) {
+  background-color: #e9e9e9; /* Slightly darker grey for even rows */
+}
+
+th {
+  background-color: #4a90e2; /* Gentle blue */
+  color: white;
+}
+
+h2 {
+  border-bottom: 2px solid #4a90e2; /* Gentle blue */
+  padding-bottom: 0.5rem;
+}
+
+.stats-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.stats-container table {
+  width: 48%;
+}
