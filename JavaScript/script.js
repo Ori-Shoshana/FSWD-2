@@ -32,15 +32,21 @@ document.addEventListener('DOMContentLoaded', () => {
         showPage(pageId, false);
     });
 
+
     // Load initial state
     const users = loadUsers();
     showPage(loadCurrentPage(), false);
+
+    let failedAttempts = 0;
+    const MAX_ATTEMPTS = 4;
+    const COOLDOWN_TIME = 30; // seconds
 
     // Handle login form submission
     loginForm.addEventListener('submit', (event) => {
         event.preventDefault();
         const username = document.getElementById('login-username').value.trim();
         const password = document.getElementById('login-password').value;
+        const loginButton = loginForm.querySelector('button');
 
         const user = users.find(u => u.username === username);
 
@@ -52,13 +58,37 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!user) {
             alert('User not found. Please register first.');
         } else if (user.password !== password) {
-            alert('Incorrect password.');
+            failedAttempts++;
+            if (failedAttempts >= MAX_ATTEMPTS) {
+                alert(`Too many failed attempts. Please wait ${COOLDOWN_TIME} seconds.`);
+                startCooldown(loginButton);
+                return;
+            } else {
+                alert('Incorrect password.');
+            }
         } else {
+            failedAttempts = 0; // Reset on successful login
             alert(`Welcome back, ${user.username}!`);
             localStorage.setItem(LOGGED_IN_USER_KEY, user.username);
             window.location.href = 'HTML/home_page.html';
         }
     });
+
+    // Start cooldown timer
+    function startCooldown(button) {
+        button.disabled = true;
+
+        let remainingTime = COOLDOWN_TIME;
+        const cooldownInterval = setInterval(() => {
+            button.textContent = `Wait ${remainingTime--}s`;
+            if (remainingTime < 0) {
+                clearInterval(cooldownInterval);
+                button.disabled = false;
+                button.textContent = 'Login';
+                failedAttempts = 0; // Reset failed attempts after cooldown
+            }
+        }, 1000);
+    }
 
     // Handle registration form submission
     registerForm.addEventListener('submit', (event) => {

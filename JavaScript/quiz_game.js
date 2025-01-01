@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const questionContainer = document.getElementById('question-container');
     const answersContainer = document.getElementById('answers-container');
     const scoreDisplay = document.getElementById('score-display');
+    const quizContainer = document.getElementById('quiz-container'); // To display feedback
     let currentQuestionIndex = 0;
     let score = 0;
 
@@ -13,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return questions;
     }
-    
+
     const questions = shuffleAnswers({
         Geography: [
             { question: "Which river is the longest in the world?", answers: [{ text: "Nile", correct: true }, { text: "Amazon", correct: false }, { text: "Yangtze", correct: false }, { text: "Mississippi", correct: false }] },
@@ -58,9 +59,9 @@ document.addEventListener('DOMContentLoaded', () => {
             { question: "Which country has won the most Olympic gold medals?", answers: [{ text: "USA", correct: true }, { text: "China", correct: false }, { text: "Russia", correct: false }, { text: "Germany", correct: false }] }
         ]
     });
-    
+
     console.log(questions);
-    
+
 
     function getQuizQuestions() {
         const quizQuestions = [];
@@ -95,14 +96,51 @@ document.addEventListener('DOMContentLoaded', () => {
             button.addEventListener('click', () => {
                 if (answer.correct) {
                     score += 10;
+                    showFeedback(true); // Show positive feedback
+                }
+                else {
+                    showFeedback(false); // Show negative feedback
                 }
                 scoreDisplay.textContent = score;
                 currentQuestionIndex++;
-                loadQuestion();
+                setTimeout(() => loadQuestion(), 1500); // Load next question after feedback
             });
             answersContainer.appendChild(button);
         });
     }
+    function showFeedback(isCorrect) {
+        const feedbackDiv = document.createElement('div');
+    
+        // Feedback styling
+        feedbackDiv.style.marginTop = '20px'; // Space above the feedback
+        feedbackDiv.style.background = isCorrect ? 'rgba(0, 255, 0, 0.8)' : 'rgba(255, 0, 0, 0.8)';
+        feedbackDiv.style.padding = '10px'; // Thinner feedback
+        feedbackDiv.style.borderRadius = '5px';
+        feedbackDiv.style.color = 'white';
+        feedbackDiv.style.fontSize = '1.2em'; // Slightly smaller font
+        feedbackDiv.style.textAlign = 'center';
+        feedbackDiv.style.boxShadow = '0px 2px 4px rgba(0, 0, 0, 0.2)';
+    
+        // Dynamically match the width of the answer buttons
+        const answerButton = answersContainer.querySelector('button');
+        if (answerButton) {
+            feedbackDiv.style.width = 'calc(100% - 20px)'; // Set feedback width to match answer width
+            feedbackDiv.style.marginLeft = 'auto'; // Center-align the feedback
+            feedbackDiv.style.marginRight = 'auto';
+        }
+    
+        const emoji = isCorrect ? '😊' : '😢';
+        const message = isCorrect ? 'Great Job!' : 'Better luck next time!';
+    
+        feedbackDiv.innerHTML = `<div>${emoji} ${message}</div>`;
+    
+        // Append feedback to the answers container (below the answers)
+        answersContainer.appendChild(feedbackDiv);
+    
+        setTimeout(() => feedbackDiv.remove(), 1500); // Remove feedback after 1.5 seconds
+    }
+    
+
 
     loadQuestion();
 
