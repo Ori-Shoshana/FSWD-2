@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const scoreDisplay = document.getElementById("score");
   const jumpVelocity = 10;
   const moveSpeed = 5;
+  let startTime = Date.now();
+  let collectedCoins = new Set();
   let gravity = -0.5;
   let isJumping = false;
   let isFalling = false;
@@ -140,75 +142,113 @@ document.addEventListener("DOMContentLoaded", () => {
     5: 0.5,
   };
 
-  function loadLevel(levelIndex) {
-    // Clear the game container
-    gameContainer.innerHTML = "";
+function loadLevel(levelIndex) {
+  // Clear the game container
+  gameContainer.innerHTML = "";
 
-    // Add the hearts
-    for (let i = 0; i < hearts; i++) {
-      const heart = document.createElement("img");
-      heart.src = "https://www.playhearts-online.com/images/heart.png";
-      heart.className = "heart";
-      heart.style.width = "30px";
-      heart.style.left = `${i * 30}px`;
-      heart.style.position = "absolute";
-      heart.style.zIndex = "2";
-      gameContainer.appendChild(heart);
+  // Add the hearts
+  for (let i = 0; i < hearts; i++) {
+    const heart = document.createElement("img");
+    heart.src = "https://www.playhearts-online.com/images/heart.png";
+    heart.className = "heart";
+    heart.style.width = "30px";
+    heart.style.left = `${i * 30}px`;
+    heart.style.position = "absolute";
+    heart.style.zIndex = "2";
+    gameContainer.appendChild(heart);
+  }
+
+  gameContainer.appendChild(player);
+  scoreDisplay.textContent = `Score: ${score}`;
+  gameContainer.appendChild(scoreDisplay);
+
+  const level = levels[levelIndex];
+
+  level.platforms.forEach((platform) => {
+    const platformElement = document.createElement("div");
+    platformElement.className = "platform";
+    if (platform.id) {
+      platformElement.id = platform.id;
+      platformElement.style.visibility = "visible"; // Reset visibility
     }
+    Object.assign(platformElement.style, platform);
+    gameContainer.appendChild(platformElement);
+  });
 
-    gameContainer.appendChild(player);
-    scoreDisplay.textContent = `Score: ${score}`;
-    gameContainer.appendChild(scoreDisplay);
+  level.spikes.forEach((spike) => {
+    const spikeElement = document.createElement("div");
+    spikeElement.className = "spike";
+    Object.assign(spikeElement.style, spike);
+    gameContainer.appendChild(spikeElement);
+  });
 
-    const level = levels[levelIndex];
-
-    level.platforms.forEach((platform) => {
-      const platformElement = document.createElement("div");
-      platformElement.className = "platform";
-      if (platform.id) {
-        platformElement.id = platform.id;
-        platformElement.style.visibility = "visible"; // Reset visibility
-      }
-      Object.assign(platformElement.style, platform);
-      gameContainer.appendChild(platformElement);
-    });
-
-    level.spikes.forEach((spike) => {
-      const spikeElement = document.createElement("div");
-      spikeElement.className = "spike";
-      Object.assign(spikeElement.style, spike);
-      gameContainer.appendChild(spikeElement);
-    });
-
-    level.coins.forEach((coin) => {
+  level.coins.forEach((coin, index) => {
+    if (!collectedCoins.has(`${levelIndex}-${index}`)) {
       const coinElement = document.createElement("div");
       coinElement.className = "coin";
       Object.assign(coinElement.style, coin);
       gameContainer.appendChild(coinElement);
-    });
-
-    level.endDoor.forEach((endDoor) => {
-      const endDoorElement = document.createElement("div");
-      endDoorElement.id = endDoor.id;
-      endDoorElement.className = "end_door";
-      Object.assign(endDoorElement.style, endDoor);
-      gameContainer.appendChild(endDoorElement);
-    });
-  }
-
-  function die(cause) {
-    hearts--;
-    if (hearts > 0) {
-      loadLevel(currentLevel);
-      resetPlayer(cause);
-    } else {
-      alert("Game Over!");
-      resetPlayer(cause);
-      hearts = 3;
-      currentLevel = 0;
-      loadLevel(currentLevel);
     }
+  });
+
+  level.endDoor.forEach((endDoor) => {
+    const endDoorElement = document.createElement("div");
+    endDoorElement.id = endDoor.id;
+    endDoorElement.className = "end_door";
+    Object.assign(endDoorElement.style, endDoor);
+    gameContainer.appendChild(endDoorElement);
+  });
+}
+
+function pickCoin(coinElement, levelIndex, coinIndex) {
+  coinElement.style.animation = "coinPickup 0.5s forwards";
+  const audio = new Audio("/Media/mixkit-coins-sound-2003.wav");
+  audio.play();
+  setTimeout(() => {
+    coinElement.remove();
+    score++;
+    collectedCoins.add(`${levelIndex}-${coinIndex}`);
+    scoreDisplay.textContent = `Score: ${score}`; // Update score display
+  }, 500);
+}
+
+function checkCoinProximity() {
+  const playerRect = player.getBoundingClientRect();
+  const coins = document.querySelectorAll(".coin");
+
+  coins.forEach((coin, index) => {
+    const coinRect = coin.getBoundingClientRect();
+    if (
+      playerRect.left < coinRect.right &&
+      playerRect.right > coinRect.left &&
+      playerRect.top < coinRect.bottom &&
+      playerRect.bottom > coinRect.top
+    ) {
+      if (!coin.classList.contains("collected")) {
+        coin.classList.add("collected");
+        pickCoin(coin, currentLevel, index);
+      }
+    }
+  });
+}
+
+function die(cause) {
+  hearts--;
+  if (hearts > 0) {
+    loadLevel(currentLevel);
+    resetPlayer(cause);
+  } else {
+    alert("Game Over!");
+    endGame();
+    resetPlayer(cause);
+    hearts = 3;
+    currentLevel = 0;
+    scoreDisplay.textContent = `Score: ${0}`; // Reset score display
+    score = 0;
+    collectedCoins.clear(); // Reset collected coins
+    loadLevel(currentLevel);
   }
+}
 
   function gravityTransition() {
     const playerRect = player.getBoundingClientRect();
@@ -290,6 +330,33 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
+  function updateScore(newScore, timeTaken) {
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    let userStats = JSON.parse(localStorage.getItem('userStats')) || {};
+  
+    if (userStats[loggedInUser]) {
+      const currentHighScore = userStats[loggedInUser].motionGame.highScore;
+      const currentBestTime = userStats[loggedInUser].motionGame.bestTime;
+  
+      if (
+        newScore > currentHighScore ||
+        (newScore === currentHighScore && timeTaken < currentBestTime)
+      ) {
+        userStats[loggedInUser].motionGame.highScore = newScore;
+        userStats[loggedInUser].motionGame.bestTime = timeTaken;
+      }
+  
+      localStorage.setItem('userStats', JSON.stringify(userStats));
+    }
+  }
+  
+  function endGame() {
+    const currentTime = Date.now();
+    const timeTaken = (currentTime - startTime) / 1000; // Time in seconds
+    updateScore(score, timeTaken);
+    startTime = currentTime;
+  }
+  
   function nextLevel() {
     currentLevel++;
     if (currentLevel < levels.length) {
@@ -297,6 +364,7 @@ document.addEventListener("DOMContentLoaded", () => {
       resetPlayer();
     } else {
       alert("You have completed all levels!");
+      endGame(); // Insert this line here
       resetPlayer();
     }
   }
@@ -426,33 +494,6 @@ document.addEventListener("DOMContentLoaded", () => {
     velocity = 0;
     gravity = -0.5;
     keys = {};
-  }
-
-  function pickCoin(coinElement) {
-    coinElement.style.animation = "coinPickup 0.5s forwards";
-    const audio = new Audio("/Media/mixkit-coins-sound-2003.wav");
-    audio.play();
-    setTimeout(() => {
-      coinElement.remove();
-      score++;
-    }, 500);
-  }
-
-  function checkCoinProximity() {
-    const playerRect = player.getBoundingClientRect();
-    const coins = document.querySelectorAll(".coin");
-
-    coins.forEach((coin) => {
-      const coinRect = coin.getBoundingClientRect();
-      if (
-        playerRect.left < coinRect.right &&
-        playerRect.right > coinRect.left &&
-        playerRect.top < coinRect.bottom &&
-        playerRect.bottom > coinRect.top
-      ) {
-        pickCoin(coin);
-      }
-    });
   }
 
   function gameLoop() {
