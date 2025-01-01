@@ -77,14 +77,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function loadQuestion() {
         if (currentQuestionIndex >= selectedQuestions.length) {
-            alert(`Quiz finished! Your final score is ${score}.`);
-            currentQuestionIndex = 0;
-            score = 0;
-            scoreDisplay.textContent = score;
-            selectedQuestions = getQuizQuestions();
-            loadQuestion();
+            showResultModal(); // Call the modal to display results and options
             return;
         }
+
 
         const currentQuestion = selectedQuestions[currentQuestionIndex];
         questionContainer.innerHTML = `<p>${currentQuestion.question}</p>`;
@@ -103,14 +99,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 scoreDisplay.textContent = score;
                 currentQuestionIndex++;
-                setTimeout(() => loadQuestion(), 1500); // Load next question after feedback
+                setTimeout(() => loadQuestion(), 1200); // Load next question after feedback
             });
             answersContainer.appendChild(button);
         });
     }
     function showFeedback(isCorrect) {
         const feedbackDiv = document.createElement('div');
-    
+
         // Feedback styling
         feedbackDiv.style.marginTop = '20px'; // Space above the feedback
         feedbackDiv.style.background = isCorrect ? 'rgba(0, 255, 0, 0.8)' : 'rgba(255, 0, 0, 0.8)';
@@ -120,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         feedbackDiv.style.fontSize = '1.2em'; // Slightly smaller font
         feedbackDiv.style.textAlign = 'center';
         feedbackDiv.style.boxShadow = '0px 2px 4px rgba(0, 0, 0, 0.2)';
-    
+
         // Dynamically match the width of the answer buttons
         const answerButton = answersContainer.querySelector('button');
         if (answerButton) {
@@ -128,19 +124,86 @@ document.addEventListener('DOMContentLoaded', () => {
             feedbackDiv.style.marginLeft = 'auto'; // Center-align the feedback
             feedbackDiv.style.marginRight = 'auto';
         }
-    
+
         const emoji = isCorrect ? '😊' : '😢';
         const message = isCorrect ? 'Great Job!' : 'Better luck next time!';
-    
+
         feedbackDiv.innerHTML = `<div>${emoji} ${message}</div>`;
-    
+
         // Append feedback to the answers container (below the answers)
         answersContainer.appendChild(feedbackDiv);
-    
-        setTimeout(() => feedbackDiv.remove(), 1500); // Remove feedback after 1.5 seconds
-    }
-    
 
+        setTimeout(() => feedbackDiv.remove(), 1200); // Remove feedback after 1.5 seconds
+    }
+
+    function showResultModal() {
+        // Clear quiz container
+        questionContainer.innerHTML = '';
+        answersContainer.innerHTML = '';
+    
+        // Create result modal
+        const resultModal = document.createElement('div');
+        resultModal.style.position = 'fixed';
+        resultModal.style.top = '40%'; // Adjusted top position for higher placement
+        resultModal.style.left = '50%';
+        resultModal.style.transform = 'translate(-50%, -50%)';
+        resultModal.style.background = 'white';
+        resultModal.style.padding = '20px';
+        resultModal.style.borderRadius = '10px';
+        resultModal.style.boxShadow = '0px 4px 8px rgba(0, 0, 0, 0.3)';
+        resultModal.style.textAlign = 'center';
+        resultModal.id = 'result-modal'; // Assign an ID for easy removal
+    
+        // Display result
+        const resultText = document.createElement('h2');
+        resultText.textContent = `Quiz Finished! Your score is ${score}.`;
+        resultModal.appendChild(resultText);
+    
+        // Back to Main Page button
+        const backButton = document.createElement('button');
+        backButton.textContent = 'Back to Main Page';
+        backButton.style.margin = '10px';
+        backButton.style.padding = '10px 20px';
+        backButton.style.borderRadius = '5px';
+        backButton.style.border = 'none';
+        backButton.style.cursor = 'pointer';
+        backButton.style.background = '#007BFF';
+        backButton.style.color = 'white';
+        backButton.addEventListener('click', () => {
+            window.location.href = '/HTML/home_page.html';
+        });
+        resultModal.appendChild(backButton);
+    
+        // Reload Quiz button
+        const reloadButton = document.createElement('button');
+        reloadButton.textContent = 'Reload Quiz';
+        reloadButton.style.margin = '10px';
+        reloadButton.style.padding = '10px 20px';
+        reloadButton.style.borderRadius = '5px';
+        reloadButton.style.border = 'none';
+        reloadButton.style.cursor = 'pointer';
+        reloadButton.style.background = '#28A745';
+        reloadButton.style.color = 'white';
+        reloadButton.addEventListener('click', () => {
+            // Reset quiz state
+            score = 0;
+            currentQuestionIndex = 0;
+            scoreDisplay.textContent = score;
+            selectedQuestions = getQuizQuestions();
+    
+            // Remove modal from DOM
+            const modal = document.getElementById('result-modal');
+            if (modal) modal.remove();
+    
+            // Load the first question
+            loadQuestion();
+        });
+        resultModal.appendChild(reloadButton);
+    
+        // Append modal to quiz container
+        quizContainer.appendChild(resultModal);
+    }    
+    
 
     loadQuestion();
 
