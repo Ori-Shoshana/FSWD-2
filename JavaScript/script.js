@@ -71,7 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const COOLDOWN_TIME = 10; // seconds
 
     // Handle login form submission
-    // Handle login form submission
     loginForm.addEventListener('submit', (event) => {
         event.preventDefault();
         const username = document.getElementById('login-username').value.trim();
