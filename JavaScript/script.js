@@ -13,6 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveUsers = (users) => localStorage.setItem(USERS_KEY, JSON.stringify(users));
     const saveCurrentPage = (pageId) => localStorage.setItem(CURRENT_PAGE_KEY, pageId);
     const loadCurrentPage = () => localStorage.getItem(CURRENT_PAGE_KEY) || 'login-page';
+    const BLOCKED_USERS_KEY = 'blockedUsers';
+
+    const loadBlockedUsers = () => JSON.parse(localStorage.getItem(BLOCKED_USERS_KEY)) || [];
+    const saveBlockedUsers = (blockedUsers) => localStorage.setItem(BLOCKED_USERS_KEY, JSON.stringify(blockedUsers));
 
     // Function to toggle between pages
     const showPage = (pageId, pushState = true) => {
@@ -32,13 +36,13 @@ document.addEventListener('DOMContentLoaded', () => {
         showPage(pageId, false);
     });
 
-
     // Load initial state
     const users = loadUsers();
     showPage(loadCurrentPage(), false);
 
     let failedAttempts = 0;
-    const MAX_ATTEMPTS = 4;
+    const MAX_ATTEMPTS_FOR_COOLDOWN = 3; // מספר ניסיונות לפני Cooldown
+    const MAX_ATTEMPTS_FOR_LOCK = 5; // מספר ניסיונות לפני Lock לצמיתות
     const COOLDOWN_TIME = 30; // seconds
 
     // Handle login form submission
@@ -49,6 +53,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const loginButton = loginForm.querySelector('button');
 
         const user = users.find(u => u.username === username);
+        const blockedUsers = loadBlockedUsers();
+
+        // בדיקת משתמש חסום
+        if (blockedUsers.includes(username)) {
+            alert('Your account is permanently blocked due to too many failed attempts.');
+            return;
+        }
 
         if (!username || !password) {
             alert('Both fields are required.');
@@ -59,15 +70,25 @@ document.addEventListener('DOMContentLoaded', () => {
             alert('User not found. Please register first.');
         } else if (user.password !== password) {
             failedAttempts++;
-            if (failedAttempts >= MAX_ATTEMPTS) {
+
+            // מנגנון Cooldown
+            if (failedAttempts >= MAX_ATTEMPTS_FOR_COOLDOWN && failedAttempts < MAX_ATTEMPTS_FOR_LOCK) {
                 alert(`Too many failed attempts. Please wait ${COOLDOWN_TIME} seconds.`);
                 startCooldown(loginButton);
                 return;
-            } else {
-                alert('Incorrect password.');
             }
+
+            // מנגנון Lock
+            if (failedAttempts >= MAX_ATTEMPTS_FOR_LOCK) {
+                blockedUsers.push(username); // הוספת המשתמש לרשימת החסומים
+                saveBlockedUsers(blockedUsers);
+                alert('Your account has been permanently blocked due to too many failed attempts.');
+                return;
+            }
+
+            alert('Incorrect password.');
         } else {
-            failedAttempts = 0; // Reset on successful login
+            failedAttempts = 0; // איפוס ניסיונות שגויים לאחר התחברות מוצלחת
             alert(`Welcome back, ${user.username}!`);
             localStorage.setItem(LOGGED_IN_USER_KEY, user.username);
             window.location.href = 'HTML/home_page.html';
