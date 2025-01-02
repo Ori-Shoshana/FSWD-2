@@ -9,29 +9,42 @@
     <script src="\JavaScript\home_page.js" defer></script>
 </head>
 <body>
-    <header>
-        <h1>Welcome to the Game Zone</h1>
+    <header class="header">
+        <h1 class="title">Welcome to the Game Zone</h1>
         <button id="burger-button" class="burger-button">&#9776;</button>
     </header>
 
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
-        <button id="profile-button">Profile</button>
-        <button id="settings-button">Settings</button>
-        <button id="logout-button">Logout</button>
+        <button id="profile-button" class="sidebar-button">👤 Profile</button>
+        <button id="settings-button" class="sidebar-button">⚙️ Settings</button>
+        <button id="logout-button" class="sidebar-button">🚪 Logout</button>
     </div>
 
     <!-- Main Content -->
     <div class="menu">
-        <button id="quiz-button">🎯 Quiz Games</button>
-        <button id="motion-button">🏃 Motion Games</button>
+        <h2 class="section-title">Available Games</h2>
+        <div class="available-games">
+            <button id="quiz-button" class="game-button">🎯 Quiz Games</button>
+            <button id="motion-button" class="game-button">🏃 Motion Games</button>
+        </div>
+    </div>
+
+    <!-- Coming Soon Section -->
+    <div class="coming-soon-section">
+        <h2 class="section-title">Coming Soon</h2>
+        <div class="coming-soon-container">
+            <button class="game-button coming-soon">🎮 Puzzle Games (Coming Soon)</button>
+            <button class="game-button coming-soon">🧩 Logic Games (Coming Soon)</button>
+        </div>
     </div>
 
     <!-- User Info -->
-    <div id="user-info">
-        <h2 id="user-name">Guest</h2> <!-- Added username here -->
+    <footer class="user-info">
+        <h3 id="user-name">try1</h3>
         <p>Total Score: <span id="user-score">0</span></p>
         <p>Last Played: <span id="last-played">None</span></p>
-    </div>
+    </footer>
 </body>
+
 </html>

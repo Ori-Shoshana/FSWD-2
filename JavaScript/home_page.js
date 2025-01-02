@@ -1,5 +1,13 @@
 // JavaScript logic for handling logout, navigation, and user statistics
 document.addEventListener('DOMContentLoaded', () => {
+    // Handle Coming Soon buttons
+    const comingSoonButtons = document.querySelectorAll('.coming-soon');
+
+    comingSoonButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            alert('This game is currently under development. Stay tuned!');
+        });
+    });
     const LOGGED_IN_USER_KEY = 'loggedInUser';
     const USER_STATS_KEY = 'userStats';
 
@@ -52,11 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebar = document.getElementById('sidebar');
 
     burgerButton.addEventListener('click', () => {
-        const currentRight = getComputedStyle(sidebar).getPropertyValue('right');
-        if (currentRight === '0px') {
-            sidebar.style.right = '-250px'; // Close the sidebar
-        } else {
-            sidebar.style.right = '0px'; // Open the sidebar
-        }
+        sidebar.classList.toggle('active');
     });
 });
