@@ -18,6 +18,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadBlockedUsers = () => JSON.parse(localStorage.getItem(BLOCKED_USERS_KEY)) || [];
     const saveBlockedUsers = (blockedUsers) => localStorage.setItem(BLOCKED_USERS_KEY, JSON.stringify(blockedUsers));
 
+    // פונקציה ליצירת Cookie
+    function setCookie(name, value, days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
+    }
+
+    // פונקציה לקריאת Cookie
+    function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const [key, value] = cookie.trim().split('=');
+            if (key === name) {
+                return value;
+            }
+        }
+        return null;
+    }
+
+    // פונקציה לבדוק אם משתמש חסום
+    function isUserBlocked(username) {
+        return getCookie(`${username}_blocked`) === 'true';
+    }
+
+
     // Function to toggle between pages
     const showPage = (pageId, pushState = true) => {
         document.querySelectorAll('.page').forEach(page => {
@@ -43,8 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let failedAttempts = 0;
     const MAX_ATTEMPTS_FOR_COOLDOWN = 3; // מספר ניסיונות לפני Cooldown
     const MAX_ATTEMPTS_FOR_LOCK = 5; // מספר ניסיונות לפני Lock לצמיתות
-    const COOLDOWN_TIME = 30; // seconds
+    const COOLDOWN_TIME = 10; // seconds
 
+    // Handle login form submission
     // Handle login form submission
     loginForm.addEventListener('submit', (event) => {
         event.preventDefault();
@@ -53,11 +79,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const loginButton = loginForm.querySelector('button');
 
         const user = users.find(u => u.username === username);
-        const blockedUsers = loadBlockedUsers();
 
-        // בדיקת משתמש חסום
-        if (blockedUsers.includes(username)) {
-            alert('Your account is permanently blocked due to too many failed attempts.');
+        // בדיקת חסימה עם Cookie
+        if (isUserBlocked(username)) {
+            alert('Your account is blocked for 24 hours due to too many failed attempts.');
             return;
         }
 
@@ -78,22 +103,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // מנגנון Lock
+            // מנגנון Lock עם Cookie
             if (failedAttempts >= MAX_ATTEMPTS_FOR_LOCK) {
-                blockedUsers.push(username); // הוספת המשתמש לרשימת החסומים
-                saveBlockedUsers(blockedUsers);
-                alert('Your account has been permanently blocked due to too many failed attempts.');
+                setCookie(`${username}_blocked`, 'true', 1); // חסימה ל-24 שעות
+                alert('Your account has been blocked for 24 hours due to too many failed attempts.');
                 return;
             }
 
             alert('Incorrect password.');
         } else {
-            failedAttempts = 0; // איפוס ניסיונות שגויים לאחר התחברות מוצלחת
+            failedAttempts = 0; // איפוס הניסיונות רק בהתחברות מוצלחת
             alert(`Welcome back, ${user.username}!`);
             localStorage.setItem(LOGGED_IN_USER_KEY, user.username);
             window.location.href = 'HTML/home_page.html';
         }
     });
+
 
     // Start cooldown timer
     function startCooldown(button) {
@@ -106,7 +131,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearInterval(cooldownInterval);
                 button.disabled = false;
                 button.textContent = 'Login';
-                failedAttempts = 0; // Reset failed attempts after cooldown
             }
         }, 1000);
     }
