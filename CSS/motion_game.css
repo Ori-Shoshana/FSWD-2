@@ -1,28 +1,31 @@
 body {
   margin: 0;
   overflow: hidden;
+  font-family: Arial, sans-serif;
+  background-color: #f7f7f7; /* Light grey background */
 }
 
 #game-container {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background: linear-gradient(to bottom, skyblue, lightgreen);
+  background: linear-gradient(to bottom, #87CEEB, #98FB98); /* Sky blue to light green */
   overflow: hidden;
 }
 
-#player {
+#figure {
   position: absolute;
-  width: calc(2vh + 2vw);
-  height: calc(2vh + 2vw);
-  background-color: blue;
+  width: 100px;
+  height: 100px;
+  margin: -5.3px;
   z-index: 1;
+  border: #000 solid 1px;
 }
 
 .platform {
   position: absolute;
-  background-color: ghostwhite;
-  border: 1px solid darkred;
+  background-color: #8FBC8F; /* Dark sea green */
+  border: 1px solid #2E8B57; /* Sea green */
   z-index: 1;
 }
 
@@ -35,8 +38,6 @@ body {
   }
 }
 
-/* Add this CSS to your existing CSS file */
-
 @keyframes spin {
   0% { transform: rotateY(0deg); }
   100% { transform: rotateY(360deg); }
@@ -46,9 +47,9 @@ body {
   position: absolute;
   width: 2vw; /* Width relative to the viewport width */
   height: 2vw; /* Height relative to the viewport width */
-  background-color: gold;
+  background-color: #FFD700; /* Gold */
   border-radius: 50%;
-  box-shadow: 0 0 10px gold;
+  box-shadow: 0 0 10px #FFD700;
   animation: spin 2s linear infinite; /* Add spinning animation */
 }
 
@@ -57,12 +58,11 @@ body {
   100% { transform: scale(0); opacity: 0; }
 }
 
-/* a spike is a pointy obstacle */
 .spike {
   position: absolute;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-bottom: 20px solid rgb(0, 0, 0);
+  border-bottom: 20px solid #000000; /* Black */
   z-index: 0;
 }
 
@@ -74,18 +74,16 @@ body {
     transform: translateY(-3.3vh);
   }
 }
-  
-
 
 .end_door {
   position: absolute;
   width: calc(3vh + 3vw);
   height: calc(4vh + 4vw);
-  background: linear-gradient(to bottom, gold ,linen ,lightblue);
-  box-shadow: 0 0 20px 5px #ffd700; /* Glowing light effect */
+  background: linear-gradient(to bottom, #FFD700, #FAF0E6, #ADD8E6); /* Gold to linen to light blue */
+  box-shadow: 0 0 20px 5px #FFD700; /* Glowing light effect */
   border-top-right-radius: 50%;
   border-top-left-radius: 50%;
-  border: 10px solid darkblue;
+  border: 10px solid #00008B; /* Dark blue */
   z-index: 0;
 }
 
@@ -93,7 +91,7 @@ body {
   position: absolute;
   top: 10px;
   left: 10px;
-  width: 10px;
+  width: 30px; /* Adjusted size for better visibility */
   z-index: 2;
 }
 
@@ -103,6 +101,6 @@ body {
   right: 10px;
   font-size: 24px;
   font-weight: bold;
-  color: black;
+  color: #000000; /* Black */
   z-index: 2;
 }

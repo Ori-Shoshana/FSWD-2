@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const player = document.getElementById("player");
+  const figure = document.getElementById("figure");
   const gameContainer = document.getElementById("game-container");
   const scoreDisplay = document.getElementById("score");
   const jumpVelocity = 10;
-  const moveSpeed = 5;
+  const moveSpeed = 3;
   let startTime = Date.now();
   let collectedCoins = new Set();
   let gravity = -0.5;
@@ -13,7 +13,24 @@ document.addEventListener("DOMContentLoaded", () => {
   let keys = {};
   let currentLevel = 0;
   let hearts = 3;
-  let score = 0;
+  let score = 0;  
+  
+  // Add the function to the figure element's prototype
+  figure.getFigureBoxValues = getFigureBoxValues;
+
+  function getFigureBoxValues() {
+    const figureRect = this.getBoundingClientRect();
+    const top = figureRect.top;
+    const bottom = figureRect.bottom; // Adjust for the shadow
+    const left = figureRect.left; // Adjust for the shadow
+    const right = figureRect.right; // Adjust for the shadow
+    const width = left - right;
+    const height = bottom - top;
+
+    return { top: top, bottom: bottom, left: left, right: right , width: width, height: height};
+  }
+
+
 
   const levels = [
     {
@@ -21,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
       platforms: [
         { bottom: "70%", left: "0", width: "100%", height: "30vh" },
         { bottom: "0%", right: "0", width: "43vw", height: "45vh" },
-        { bottom: "0%", left: "0", width: "43vw", height: "45vh" },
+        { bottom: "0%", left:  "0", width: "43vw", height: "45vh" },
         {
           bottom: "0%",
           left: "43vw",
@@ -142,116 +159,116 @@ document.addEventListener("DOMContentLoaded", () => {
     5: 0.5,
   };
 
-function loadLevel(levelIndex) {
-  // Clear the game container
-  gameContainer.innerHTML = "";
+  function loadLevel(levelIndex) {
+    // Clear the game container
+    gameContainer.innerHTML = "";
 
-  // Add the hearts
-  for (let i = 0; i < hearts; i++) {
-    const heart = document.createElement("img");
-    heart.src = "https://www.playhearts-online.com/images/heart.png";
-    heart.className = "heart";
-    heart.style.width = "30px";
-    heart.style.left = `${i * 30}px`;
-    heart.style.position = "absolute";
-    heart.style.zIndex = "2";
-    gameContainer.appendChild(heart);
-  }
-
-  gameContainer.appendChild(player);
-  scoreDisplay.textContent = `Score: ${score}`;
-  gameContainer.appendChild(scoreDisplay);
-
-  const level = levels[levelIndex];
-
-  level.platforms.forEach((platform) => {
-    const platformElement = document.createElement("div");
-    platformElement.className = "platform";
-    if (platform.id) {
-      platformElement.id = platform.id;
-      platformElement.style.visibility = "visible"; // Reset visibility
+    // Add the hearts
+    for (let i = 0; i < hearts; i++) {
+      const heart = document.createElement("img");
+      heart.src = "https://www.playhearts-online.com/images/heart.png";
+      heart.className = "heart";
+      heart.style.width = "30px";
+      heart.style.left = `${i * 30}px`;
+      heart.style.position = "absolute";
+      heart.style.zIndex = "2";
+      gameContainer.appendChild(heart);
     }
-    Object.assign(platformElement.style, platform);
-    gameContainer.appendChild(platformElement);
-  });
 
-  level.spikes.forEach((spike) => {
-    const spikeElement = document.createElement("div");
-    spikeElement.className = "spike";
-    Object.assign(spikeElement.style, spike);
-    gameContainer.appendChild(spikeElement);
-  });
+    gameContainer.appendChild(figure);
+    scoreDisplay.textContent = `Score: ${score}`;
+    gameContainer.appendChild(scoreDisplay);
 
-  level.coins.forEach((coin, index) => {
-    if (!collectedCoins.has(`${levelIndex}-${index}`)) {
-      const coinElement = document.createElement("div");
-      coinElement.className = "coin";
-      Object.assign(coinElement.style, coin);
-      gameContainer.appendChild(coinElement);
-    }
-  });
+    const level = levels[levelIndex];
 
-  level.endDoor.forEach((endDoor) => {
-    const endDoorElement = document.createElement("div");
-    endDoorElement.id = endDoor.id;
-    endDoorElement.className = "end_door";
-    Object.assign(endDoorElement.style, endDoor);
-    gameContainer.appendChild(endDoorElement);
-  });
-}
-
-function pickCoin(coinElement, levelIndex, coinIndex) {
-  coinElement.style.animation = "coinPickup 0.5s forwards";
-  const audio = new Audio("/Media/mixkit-coins-sound-2003.wav");
-  audio.play();
-  setTimeout(() => {
-    coinElement.remove();
-    score++;
-    collectedCoins.add(`${levelIndex}-${coinIndex}`);
-    scoreDisplay.textContent = `Score: ${score}`; // Update score display
-  }, 500);
-}
-
-function checkCoinProximity() {
-  const playerRect = player.getBoundingClientRect();
-  const coins = document.querySelectorAll(".coin");
-
-  coins.forEach((coin, index) => {
-    const coinRect = coin.getBoundingClientRect();
-    if (
-      playerRect.left < coinRect.right &&
-      playerRect.right > coinRect.left &&
-      playerRect.top < coinRect.bottom &&
-      playerRect.bottom > coinRect.top
-    ) {
-      if (!coin.classList.contains("collected")) {
-        coin.classList.add("collected");
-        pickCoin(coin, currentLevel, index);
+    level.platforms.forEach((platform) => {
+      const platformElement = document.createElement("div");
+      platformElement.className = "platform";
+      if (platform.id) {
+        platformElement.id = platform.id;
+        platformElement.style.visibility = "visible"; // Reset visibility
       }
-    }
-  });
-}
+      Object.assign(platformElement.style, platform);
+      gameContainer.appendChild(platformElement);
+    });
 
-function die(cause) {
-  hearts--;
-  if (hearts > 0) {
-    loadLevel(currentLevel);
-    resetPlayer(cause);
-  } else {
-    alert("Game Over!");
-    endGame();
-    resetPlayer(cause);
-    hearts = 3;
-    currentLevel = 0;
-    scoreDisplay.textContent = `Score: ${0}`; // Reset score display
-    score = 0;
-    collectedCoins.clear(); // Reset collected coins
-    loadLevel(currentLevel);
+    level.spikes.forEach((spike) => {
+      const spikeElement = document.createElement("div");
+      spikeElement.className = "spike";
+      Object.assign(spikeElement.style, spike);
+      gameContainer.appendChild(spikeElement);
+    });
+
+    level.coins.forEach((coin, index) => {
+      if (!collectedCoins.has(`${levelIndex}-${index}`)) {
+        const coinElement = document.createElement("div");
+        coinElement.className = "coin";
+        Object.assign(coinElement.style, coin);
+        gameContainer.appendChild(coinElement);
+      }
+    });
+
+    level.endDoor.forEach((endDoor) => {
+      const endDoorElement = document.createElement("div");
+      endDoorElement.id = endDoor.id;
+      endDoorElement.className = "end_door";
+      Object.assign(endDoorElement.style, endDoor);
+      gameContainer.appendChild(endDoorElement);
+    });
   }
-}
+
+  function pickCoin(coinElement, levelIndex, coinIndex) {
+    coinElement.style.animation = "coinPickup 0.5s forwards";
+    const audio = new Audio("/Media/mixkit-coins-sound-2003.wav");
+    audio.play();
+    setTimeout(() => {
+      coinElement.remove();
+      score++;
+      collectedCoins.add(`${levelIndex}-${coinIndex}`);
+      scoreDisplay.textContent = `Score: ${score}`; // Update score display
+    }, 500);
+  }
+
+  function checkCoinProximity() {
+    const playerRect = figure.getFigureBoxValues();
+    const coins = document.querySelectorAll(".coin");
+
+    coins.forEach((coin, index) => {
+      const coinRect = coin.getBoundingClientRect();
+      if (
+        playerRect.left < coinRect.right &&
+        playerRect.right > coinRect.left &&
+        playerRect.top < coinRect.bottom &&
+        playerRect.bottom > coinRect.top
+      ) {
+        if (!coin.classList.contains("collected")) {
+          coin.classList.add("collected");
+          pickCoin(coin, currentLevel, index);
+        }
+      }
+    });
+  }
+
+  function die(cause) {
+    hearts--;
+    if (hearts > 0) {
+      loadLevel(currentLevel);
+      resetPlayer(cause);
+    } else {
+      alert("Game Over!");
+      endGame();
+      resetPlayer(cause);
+      hearts = 3;
+      currentLevel = 0;
+      scoreDisplay.textContent = `Score: ${0}`; // Reset score display
+      score = 0;
+      collectedCoins.clear(); // Reset collected coins
+      loadLevel(currentLevel);
+    }
+  }
 
   function gravityTransition() {
-    const playerRect = player.getBoundingClientRect();
+    const playerRect = figure.getFigureBoxValues();
     const gameContainerRect = gameContainer.getBoundingClientRect();
 
     // Calculate the percentage of the screen the player has traversed horizontally
@@ -278,7 +295,7 @@ function die(cause) {
   function trick() {
     const trick = document.getElementById("trick");
     if (trick) {
-      const playerRect = player.getBoundingClientRect();
+      const playerRect = figure.getFigureBoxValues();
       const trickRect = trick.getBoundingClientRect();
       const proximityX = trickRect.width / 3; // Horizontal proximity
       const proximityY = trickRect.height / 3; // Vertical proximity
@@ -331,13 +348,13 @@ function die(cause) {
   }
 
   function updateScore(newScore, timeTaken) {
-    const loggedInUser = localStorage.getItem('loggedInUser');
-    let userStats = JSON.parse(localStorage.getItem('userStats')) || {};
-  
+    const loggedInUser = localStorage.getItem("loggedInUser");
+    let userStats = JSON.parse(localStorage.getItem("userStats")) || {};
+
     if (userStats[loggedInUser]) {
       const currentHighScore = userStats[loggedInUser].motionGame.highScore;
       const currentBestTime = userStats[loggedInUser].motionGame.bestTime;
-  
+
       if (
         newScore > currentHighScore ||
         (newScore === currentHighScore && timeTaken < currentBestTime)
@@ -345,18 +362,18 @@ function die(cause) {
         userStats[loggedInUser].motionGame.highScore = newScore;
         userStats[loggedInUser].motionGame.bestTime = timeTaken;
       }
-  
-      localStorage.setItem('userStats', JSON.stringify(userStats));
+
+      localStorage.setItem("userStats", JSON.stringify(userStats));
     }
   }
-  
+
   function endGame() {
     const currentTime = Date.now();
     const timeTaken = (currentTime - startTime) / 1000; // Time in seconds
     updateScore(score, timeTaken);
     startTime = currentTime;
   }
-  
+
   function nextLevel() {
     currentLevel++;
     if (currentLevel < levels.length) {
@@ -378,7 +395,7 @@ function die(cause) {
   });
 
   function getPlatformBelow() {
-    const playerRect = player.getBoundingClientRect();
+    const playerRect = figure.getFigureBoxValues();
     const playerBottom = playerRect.bottom;
     const playerLeft = playerRect.left;
     const playerRight = playerRect.right;
@@ -392,7 +409,7 @@ function die(cause) {
 
       if (playerRight > platformRect.left && playerLeft < platformRect.right) {
         const distance = platformRect.top - playerBottom;
-        if (distance >= -5 && distance < closestDistance) {
+        if (distance >= -6 && distance < closestDistance) {
           closestPlatform = platform;
           closestDistance = distance;
         }
@@ -403,7 +420,7 @@ function die(cause) {
   }
 
   function getPlatformAbove() {
-    const playerRect = player.getBoundingClientRect();
+    const playerRect = figure.getFigureBoxValues();
     const playerTop = playerRect.top;
     const playerLeft = playerRect.left;
     const playerRight = playerRect.right;
@@ -428,7 +445,7 @@ function die(cause) {
   }
 
   function checkSideCollisions() {
-    const playerRect = player.getBoundingClientRect();
+    const playerRect = figure.getFigureBoxValues();
     const platforms = document.querySelectorAll(".platform");
 
     platforms.forEach((platform) => {
@@ -438,27 +455,27 @@ function die(cause) {
         playerRect.bottom > platformRect.top &&
         playerRect.top < platformRect.bottom
       ) {
-        const isOnPlatform = playerRect.bottom <= platformRect.top + 5; // we add for a little tolerance to avoid the player getting glitched
+        const isOnPlatform = playerRect.bottom <= platformRect.top + 6; // we add for a little tolerance to avoid the player getting glitched
 
         if (
-          playerRect.right > platformRect.left &&
+          playerRect.right > platformRect.left&&
           playerRect.left < platformRect.left &&
           !isOnPlatform
         ) {
-          player.style.left = `${platformRect.left - playerRect.width}px`;
+          figure.style.left = `${platformRect.left - playerRect.width}px`;
         } else if (
           playerRect.left < platformRect.right &&
           playerRect.right > platformRect.right &&
           !isOnPlatform
         ) {
-          player.style.left = `${platformRect.right}px`;
+          figure.style.left = `${platformRect.right}px`;
         }
       }
     });
   }
 
   function checkSpikeProximity() {
-    const playerRect = player.getBoundingClientRect();
+    const playerRect = figure.getFigureBoxValues();
     const spikes = document.querySelectorAll(".spike");
 
     spikes.forEach((spike) => {
@@ -487,8 +504,8 @@ function die(cause) {
   }
 
   function resetPlayer(cause = null) {
-    player.style.bottom = `${gameContainer.clientHeight / 2}px`;
-    player.style.left = "50px";
+    figure.style.bottom = `${gameContainer.clientHeight / 2}px`;
+    figure.style.left = "50px";
     isJumping = false;
     isFalling = false;
     velocity = 0;
@@ -499,18 +516,18 @@ function die(cause) {
   function gameLoop() {
     // Handle left movement
     if (keys["ArrowLeft"]) {
-      let newLeft = parseInt(player.style.left) - moveSpeed;
+      let newLeft = parseInt(figure.style.left) - moveSpeed;
       if (newLeft >= 0) {
-        player.style.left = `${newLeft}px`;
+        figure.style.left = `${newLeft}px`;
         checkSideCollisions();
       }
     }
 
     // Handle right movement
     if (keys["ArrowRight"]) {
-      let newLeft = parseInt(player.style.left) + moveSpeed;
-      if (newLeft <= gameContainer.clientWidth - player.clientWidth) {
-        player.style.left = `${newLeft}px`;
+      let newLeft = parseInt(figure.style.left) + moveSpeed;
+      if (newLeft <= gameContainer.clientWidth - figure.clientWidth) {
+        figure.style.left = `${newLeft}px`;
         checkSideCollisions();
       }
     }
@@ -531,7 +548,7 @@ function die(cause) {
     velocity += gravity;
 
     // Calculate new position
-    let newBottom = parseInt(player.style.bottom) + velocity;
+    let newBottom = parseInt(figure.style.bottom) + velocity;
 
     // Get platforms above and below
     const { platform: platformBelow, distance: distanceBelow } =
@@ -559,7 +576,7 @@ function die(cause) {
           newBottom =
             gameContainer.clientHeight -
             platformRect.bottom -
-            player.clientHeight;
+            figure.clientHeight;
           velocity = 0;
         }
       }
@@ -574,7 +591,7 @@ function die(cause) {
           newBottom =
             gameContainer.clientHeight -
             platformRect.bottom -
-            player.clientHeight;
+            figure.clientHeight;
           isJumping = false;
           isFalling = false;
           velocity = 0;
@@ -594,12 +611,12 @@ function die(cause) {
     }
 
     // Apply new position
-    player.style.bottom = `${newBottom}px`;
+    figure.style.bottom = `${newBottom}px`;
 
     // Handle platform snapping when standing still
     if (!isJumping && platformBelow && distanceBelow <= 0) {
       const platformRect = platformBelow.getBoundingClientRect();
-      player.style.bottom = `${
+      figure.style.bottom = `${
         gameContainer.clientHeight - platformRect.top
       }px`;
       velocity = 0;
@@ -612,7 +629,7 @@ function die(cause) {
     // Check if player reaches the end door
     const endDoor = document.querySelector(".end_door");
     const endDoorRect = endDoor.getBoundingClientRect();
-    const playerRect = player.getBoundingClientRect();
+    const playerRect = figure.getFigureBoxValues();
     if (
       playerRect.left < endDoorRect.right &&
       playerRect.right > endDoorRect.left &&
