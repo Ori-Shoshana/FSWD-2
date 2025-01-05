@@ -28,6 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'motion_game.html';
     });
 
+    const pixelButton = document.getElementById('pixel-button');
+    pixelButton.addEventListener('click', () => {
+        window.location.href = 'motion.html';
+    });
+
     const profileButton = document.getElementById('profile-button');
     profileButton.addEventListener('click', () => {
         window.location.href = 'profile_page.html';

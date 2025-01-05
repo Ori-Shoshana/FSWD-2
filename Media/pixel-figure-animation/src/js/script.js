@@ -18,17 +18,11 @@ let isJumping = false; // Tracks if the user is jumping
 function updateFigureAnimation() {
     const figure = document.getElementById('figure');
 
-    // Ensure currentAction is valid
-    if (!actions[currentAction]) {
-        console.error(`Invalid action: ${currentAction}`);
-        return;
-    }
+    // Update the frame index
+    frameIndex = (frameIndex + 1) % actions[currentAction].length;
 
     // Update the source of the image
     figure.src = `/Media/Sprites/Gino Character/PNG/Idle, run, jump/${actions[currentAction][frameIndex]}`;
-
-    // Update the frame index
-    frameIndex = (frameIndex + 1) % actions[currentAction].length;
 
     // Flip the image based on the direction
     figure.style.transform = direction === 'right' ? 'scaleX(1)' : 'scaleX(-1)';
