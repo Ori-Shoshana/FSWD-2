@@ -13,6 +13,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveUsers = (users) => localStorage.setItem(USERS_KEY, JSON.stringify(users));
     const saveCurrentPage = (pageId) => localStorage.setItem(CURRENT_PAGE_KEY, pageId);
     const loadCurrentPage = () => localStorage.getItem(CURRENT_PAGE_KEY) || 'login-page';
+    const BLOCKED_USERS_KEY = 'blockedUsers';
+
+    const loadBlockedUsers = () => JSON.parse(localStorage.getItem(BLOCKED_USERS_KEY)) || [];
+    const saveBlockedUsers = (blockedUsers) => localStorage.setItem(BLOCKED_USERS_KEY, JSON.stringify(blockedUsers));
+
+    // פונקציה ליצירת Cookie
+    function setCookie(name, value, days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
+    }
+
+    // פונקציה לקריאת Cookie
+    function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const [key, value] = cookie.trim().split('=');
+            if (key === name) {
+                return value;
+            }
+        }
+        return null;
+    }
+
+    // פונקציה לבדוק אם משתמש חסום
+    function isUserBlocked(username) {
+        return getCookie(`${username}_blocked`) === 'true';
+    }
+
 
     // Function to toggle between pages
     const showPage = (pageId, pushState = true) => {
@@ -36,13 +65,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const users = loadUsers();
     showPage(loadCurrentPage(), false);
 
+    let failedAttempts = 0;
+    const MAX_ATTEMPTS_FOR_COOLDOWN = 3; // מספר ניסיונות לפני Cooldown
+    const MAX_ATTEMPTS_FOR_LOCK = 5; // מספר ניסיונות לפני Lock לצמיתות
+    const COOLDOWN_TIME = 10; // seconds
+
     // Handle login form submission
     loginForm.addEventListener('submit', (event) => {
         event.preventDefault();
         const username = document.getElementById('login-username').value.trim();
         const password = document.getElementById('login-password').value;
+        const loginButton = loginForm.querySelector('button');
 
         const user = users.find(u => u.username === username);
+
+        // בדיקת חסימה עם Cookie
+        if (isUserBlocked(username)) {
+            alert('Your account is blocked for 24 hours due to too many failed attempts.');
+            return;
+        }
 
         if (!username || !password) {
             alert('Both fields are required.');
@@ -52,13 +93,46 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!user) {
             alert('User not found. Please register first.');
         } else if (user.password !== password) {
+            failedAttempts++;
+
+            // מנגנון Cooldown
+            if (failedAttempts >= MAX_ATTEMPTS_FOR_COOLDOWN && failedAttempts < MAX_ATTEMPTS_FOR_LOCK) {
+                alert(`Too many failed attempts. Please wait ${COOLDOWN_TIME} seconds.`);
+                startCooldown(loginButton);
+                return;
+            }
+
+            // מנגנון Lock עם Cookie
+            if (failedAttempts >= MAX_ATTEMPTS_FOR_LOCK) {
+                setCookie(`${username}_blocked`, 'true', 1); // חסימה ל-24 שעות
+                alert('Your account has been blocked for 24 hours due to too many failed attempts.');
+                return;
+            }
+
             alert('Incorrect password.');
         } else {
+            failedAttempts = 0; // איפוס הניסיונות רק בהתחברות מוצלחת
             alert(`Welcome back, ${user.username}!`);
             localStorage.setItem(LOGGED_IN_USER_KEY, user.username);
             window.location.href = 'HTML/home_page.html';
         }
     });
+
+
+    // Start cooldown timer
+    function startCooldown(button) {
+        button.disabled = true;
+
+        let remainingTime = COOLDOWN_TIME;
+        const cooldownInterval = setInterval(() => {
+            button.textContent = `Wait ${remainingTime--}s`;
+            if (remainingTime < 0) {
+                clearInterval(cooldownInterval);
+                button.disabled = false;
+                button.textContent = 'Login';
+            }
+        }, 1000);
+    }
 
     // Handle registration form submission
     registerForm.addEventListener('submit', (event) => {
