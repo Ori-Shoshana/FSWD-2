@@ -4,7 +4,7 @@ const actions = {
   jump: [
     ...Array.from({ length: 2 }, (_, i) => `jump_start0${i + 1}.png`),
     ...Array.from({ length: 4 }, (_, i) => `jump_mid0${i + 1}.png`),
-    ...Array.from({ length: 3 }, (_, i) => `jump_mid0${i + 1}.png`),
+    ...Array.from({ length: 4 }, (_, i) => `jump_mid0${i + 1}.png`),
     "jump_landing.png",
   ],
   slide: [

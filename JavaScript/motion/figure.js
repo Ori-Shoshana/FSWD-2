@@ -1,6 +1,7 @@
 class Figure {
   constructor(element) {
     this.element = element;
+    this.hearts = 3;
     this.direction = "right";
     // Percentage margins for the collision box
     this.margins = {
@@ -26,7 +27,7 @@ class Figure {
     this.element.style.top = `${this.position.top}px`;
 
     // Movement properties
-    this.movementSpeed = 4;
+    this.movementSpeed = 3;
     this.gravity = 0.5;
     this.jumpStrength = 10;
     this.friction = 0.9;
@@ -79,7 +80,6 @@ class Figure {
       this.position.left += this.direction === "right" ? -30 : 30;
       this.direction = direction;
     }
-
 
     // Apply friction when not running
     if (!isRunning) {
@@ -181,7 +181,9 @@ class Figure {
             if (figureBox.bottom - platformBox.top > 0) {
               this.setPosition(
                 this.position.left,
-                platformBox.top - this.height + this.height * this.margins.bottom
+                platformBox.top -
+                  this.height +
+                  this.height * this.margins.bottom
               );
               this.velocity.y = 0;
               isJumping = false;
@@ -203,6 +205,7 @@ class Figure {
                 platformBox.left - this.width + this.width * this.margins.right,
                 this.position.top
               );
+              this.velocity.x = 0;
             }
             break;
           case "right":
@@ -211,6 +214,7 @@ class Figure {
                 platformBox.right - this.width * (this.margins.right - 0.09),
                 this.position.top
               );
+              this.velocity.x = 0;
             }
             break;
           default:
@@ -243,32 +247,52 @@ class Figure {
       isJumping = true;
     }
 
-    // Keep the figure within the game container bounds
+    this.isFigureInBounds();
+  }
+
+  isFigureInBounds() {
     const gameContainer = document.getElementById("game-container");
     const containerWidth = gameContainer.clientWidth;
     const containerHeight = gameContainer.clientHeight;
 
-    const boundedLeft = Math.max(
-      0,
-      Math.min(
-        containerWidth - this.width + this.width * this.margins.right,
-        this.position.left
-      )
-    );
-    const boundedTop = Math.max(
-      0,
-      Math.min(
-        containerHeight - this.height * this.margins.top,
-        this.position.top
-      )
-    );
-
     if (
-      boundedLeft !== this.position.left ||
-      boundedTop !== this.position.top
+      !(
+        this.position.top + this.height >= 0 &&
+        this.position.top <= containerHeight + this.height
+      )
     ) {
-      this.setPosition(boundedLeft, boundedTop);
+      if (!removeHeart()) {
+        initializeGame(1);
+      }
+      this.resetFigurePosition();
+      return false;
     }
+    // Check if the figure is out of the left side of the container
+    if (!(this.position.left + this.width >= 0)) {
+      // if it's the first level, reset the game and decrease the number of hearts
+      if (indexlevel === 1) {
+        if (!removeHeart()) {
+          initializeGame(1);
+        }
+        this.resetFigurePosition();
+        return false;
+      } // else reload the game board with the previous level
+      else {
+        reloadGameBoard(--indexlevel);
+      }
+    }
+    // Check if the figure is out of the right side of the container
+    // meaning he has reached the end of the level
+    if (!(this.position.left <= containerWidth)) {
+      initializeGame(++indexlevel);
+      this.resetFigurePosition(this.position.left, this.position.top);
+    }
+  }
+
+  resetFigurePosition(left = 50, top = 130) {
+    // Reset the figure's position to a default location within the game container
+    this.setPosition(left, top); // Example default position
+    this.velocity = { x: 0, y: 0 }; // Reset velocity
   }
 }
 
