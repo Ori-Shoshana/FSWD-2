@@ -46,10 +46,10 @@ body {
   height: 32px; /* Adjust as needed */
 }
 
-#coin {
+.coin {
   position: absolute;
-  width: 32px; /* Adjust as needed */
-  height: 32px; /* Adjust as needed */
+  width: 15px; /* Adjust as needed */
+  height: 15px; /* Adjust as needed */
   z-index: 1;
 }
 

@@ -86,9 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    for(let i = 0; i < cols; i++){
-       
+    for(let i = 7; i < cols - 6; i++){
+        matrix[rows - 5][i] = -1;
     }
 
-    // addCoins(matrix, tileSize);
+    addCoins(matrix, tileSize);
 });

@@ -87,13 +87,16 @@ let coinFrameIndex = 0;
 let coinCurrentAction = "spin";
 
 function updateCoinAnimation() {
-  const coin = document.getElementById("coin");
+
+  const coins = document.getElementsByClassName("coin");
 
   // Update the frame index
   coinFrameIndex = (coinFrameIndex + 1) % coinActions[coinCurrentAction].length;
 
+  for (let coin of coins) {
   // Update the source of the image
   coin.src = `/Media/free-swamp-game-tileset-pixel-art/4 Animated objects/${coinActions[coinCurrentAction][coinFrameIndex]}`;
+  }
 }
 
 setInterval(updateCoinAnimation, 100);

@@ -1,4 +1,5 @@
 const platforms = []; // Define the platforms array
+const coins = []; // Define the coins array
 
 // Function to create a dynamic matrix based on the game container's dimensions
 function createDynamicMatrix(containerWidth, containerHeight) {
@@ -48,4 +49,37 @@ function addTiles(matrix, tileSize) {
         });
     });
 }
+
+function addCoins(matrix , tileSize) {
+    const gameContainer = document.getElementById('game-container');
+
+    matrix.forEach((row, rowIndex) => {
+        row.forEach((coin, colIndex) => {
+            if (coin !== 0 && coin === -1) {
+                const coinElement = document.createElement('img');
+                coinElement.className = 'coin';
+                coinElement.style.left = `${colIndex * tileSize}px`;
+                coinElement.style.top = `${rowIndex * tileSize}px`;
+                gameContainer.appendChild(coinElement);
+
+                coins.push({
+                    top: rowIndex * tileSize,
+                    left: colIndex * tileSize,
+                    bottom: rowIndex * tileSize + tileSize,
+                    right: colIndex * tileSize + tileSize,
+                    width: 15,
+                    height: 15,
+                    element: coinElement,
+                });
+            }
+        });
+    });
+}
+
+
+function removeCoin(coinElement) {
+    coinElement.remove();
+}
+
+
 

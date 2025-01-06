@@ -219,6 +219,25 @@ class Figure {
       }
     });
 
+    coins.forEach((coin, index) => {
+      const coinBox = {
+        left: coin.left,
+        right: coin.left + coin.width,
+        top: coin.top,
+        bottom: coin.top + coin.height,
+      };
+
+      if (
+        figureBox.right > coinBox.left &&
+        figureBox.left < coinBox.right &&
+        figureBox.bottom > coinBox.top &&
+        figureBox.top < coinBox.bottom
+      ) {
+        coins.splice(index, 1);
+        removeCoin(coin.element);
+      }
+    });
+
     // If not on any platform, apply gravity
     if (!onPlatform) {
       isJumping = true;
