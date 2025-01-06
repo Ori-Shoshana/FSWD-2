@@ -2,12 +2,23 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Handle Coming Soon buttons
     const comingSoonButtons = document.querySelectorAll('.coming-soon');
+    const comingSoonMessage = document.getElementById('coming-soon-message'); // Message container
 
     comingSoonButtons.forEach(button => {
         button.addEventListener('click', () => {
-            alert('This game is currently under development. Stay tuned!');
+            showComingSoonMessage('This game is currently under development. Stay tuned!');
         });
     });
+
+    function showComingSoonMessage(message) {
+        comingSoonMessage.textContent = message;
+        comingSoonMessage.classList.remove('hidden');
+
+        // Hide the message after 2.5 seconds
+        setTimeout(() => {
+            comingSoonMessage.classList.add('hidden');
+        }, 2500);
+    }
     const LOGGED_IN_USER_KEY = 'loggedInUser';
     const USER_STATS_KEY = 'userStats';
 
@@ -21,11 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const quizButton = document.getElementById('quiz-button');
     quizButton.addEventListener('click', () => {
         window.location.href = 'quiz_game.html';
-    });
-
-    const motionButton = document.getElementById('motion-button');
-    motionButton.addEventListener('click', () => {
-        window.location.href = 'motion_game.html';
     });
 
     const pixelButton = document.getElementById('pixel-button');

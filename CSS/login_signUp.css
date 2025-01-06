@@ -65,3 +65,16 @@ h1 {
 .hidden {
   display: none !important;
 }
+.message {
+  margin-top: 18px; /* Space between inputs and the message */
+  margin-bottom: 10px; /* Optional space before the button */
+  color: #d32f2f; /* Red for error messages */
+  font-size: 14px;
+  text-align: center;
+  display: none; /* Hide by default */
+}
+
+.message.success {
+  color: #388e3c; /* Green for success messages */
+}
+

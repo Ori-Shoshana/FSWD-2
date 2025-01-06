@@ -12,12 +12,12 @@ body {
   overflow-x: hidden;
 }
 
-/* כותרת ראשית */
+/* Header Section */
 .header {
   background: rgba(0, 0, 0, 0.8);
   width: 100%;
-  padding: 20px 20px 20px 60px; /* הזזה ימינה עם padding */
-  margin-bottom: 40px; /* להגדיל את המרחק מהחלק הבא */
+  padding: 20px 40px; /* Adjust spacing for alignment */
+  margin-bottom: 40px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   position: fixed;
   top: 0;
@@ -88,12 +88,13 @@ body {
   color: #ddd;
 }
 
-/* Main Content - החלק של המשחקים */
+/* Main Content - Game Sections */
 .menu, .coming-soon-section {
-  margin-top: 180px; /* הזזת המשחקים יותר למטה */
+  margin-top: 180px; /* Adjust margin to position sections closer */
   text-align: center;
   width: 80%;
 }
+
 .section-title {
   font-size: 2.5rem;
   color: #333;
@@ -101,7 +102,23 @@ body {
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-/* Buttons */
+/* Game Button and Image Integration */
+.available-games, .coming-soon-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px; /* Add spacing between buttons */
+  align-items: center; /* Align buttons and images */
+}
+
+/* Combined Button and Image Styling */
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px; /* Space between button and image */
+}
+
+/* Game Buttons */
 .game-button {
   padding: 15px 30px;
   font-size: 1.2rem;
@@ -111,6 +128,7 @@ body {
   transition: transform 0.3s ease, background-color 0.3s ease;
   margin: 10px;
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.2);
+  text-align: center;
 }
 
 .available-games .game-button {
@@ -121,12 +139,6 @@ body {
 .available-games .game-button:hover {
   background-color: #45a049;
   transform: translateY(-5px);
-}
-
-.coming-soon-container {
-  display: flex;
-  gap: 20px;
-  justify-content: center;
 }
 
 .coming-soon {
@@ -140,7 +152,15 @@ body {
   transform: none;
 }
 
-/* User Info */
+/* Game Images */
+.game-image {
+  width: 180px; /* Adjust width of images */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* User Info Section */
 .user-info {
   margin-top: auto;
   background: rgba(0, 0, 0, 0.7);
@@ -158,4 +178,24 @@ body {
 
 .user-info p {
   margin: 5px 0;
+}
+
+/* Feedback Messages */
+.message {
+  margin-top: 15px;
+  font-size: 1.2rem;
+  color: white;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.3s ease;
+}
+
+.hidden {
+  display: none;
 }

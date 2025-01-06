@@ -18,6 +18,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadBlockedUsers = () => JSON.parse(localStorage.getItem(BLOCKED_USERS_KEY)) || [];
     const saveBlockedUsers = (blockedUsers) => localStorage.setItem(BLOCKED_USERS_KEY, JSON.stringify(blockedUsers));
 
+    function showMessage(message, isSuccess = false) {
+        const messageDiv = document.getElementById('login-message');
+        messageDiv.textContent = message;
+        messageDiv.className = isSuccess ? 'message success' : 'message';
+        messageDiv.style.display = 'block';
+    }
+    document.querySelectorAll('#login-username, #login-password').forEach(input => {
+        input.addEventListener('input', () => {
+            document.getElementById('login-message').style.display = 'none';
+        });
+    });
+
     // פונקציה ליצירת Cookie
     function setCookie(name, value, days) {
         const date = new Date();
@@ -81,23 +93,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // בדיקת חסימה עם Cookie
         if (isUserBlocked(username)) {
-            alert('Your account is blocked for 24 hours due to too many failed attempts.');
+            showMessage('Your account is blocked for 24 hours due to too many failed attempts.');
             return;
         }
 
         if (!username || !password) {
-            alert('Both fields are required.');
+            showMessage('Both fields are required.');
             return;
         }
 
         if (!user) {
-            alert('User not found. Please register first.');
+            showMessage('User not found. Please register first.');
         } else if (user.password !== password) {
             failedAttempts++;
 
             // מנגנון Cooldown
             if (failedAttempts >= MAX_ATTEMPTS_FOR_COOLDOWN && failedAttempts < MAX_ATTEMPTS_FOR_LOCK) {
-                alert(`Too many failed attempts. Please wait ${COOLDOWN_TIME} seconds.`);
+                showMessage(`Too many failed attempts. Please wait ${COOLDOWN_TIME} seconds.`);
                 startCooldown(loginButton);
                 return;
             }
@@ -105,16 +117,19 @@ document.addEventListener('DOMContentLoaded', () => {
             // מנגנון Lock עם Cookie
             if (failedAttempts >= MAX_ATTEMPTS_FOR_LOCK) {
                 setCookie(`${username}_blocked`, 'true', 1); // חסימה ל-24 שעות
-                alert('Your account has been blocked for 24 hours due to too many failed attempts.');
+                showMessage('Your account is blocked for 24 hours due to too many failed attempts.');
                 return;
             }
-
-            alert('Incorrect password.');
+            showMessage('Incorrect password.');
         } else {
             failedAttempts = 0; // איפוס הניסיונות רק בהתחברות מוצלחת
-            alert(`Welcome back, ${user.username}!`);
+            showMessage(`Welcome back, ${user.username}! Redirecting...`, true); // Show a success message
             localStorage.setItem(LOGGED_IN_USER_KEY, user.username);
-            window.location.href = 'HTML/home_page.html';
+
+            // Add a delay before redirecting
+            setTimeout(() => {
+                window.location.href = 'HTML/home_page.html';
+            }, 1500); // 1.5 seconds delay
         }
     });
 
@@ -161,10 +176,18 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        users.push({ username, email, password });
+        // Add the new user
+        const newUser = { username, email, password };
+        users.push(newUser);
         saveUsers(users);
-        alert('Registration successful! You can now log in.');
-        toggleToLogin.click();
+
+        // Automatically log the user in
+        localStorage.setItem(LOGGED_IN_USER_KEY, username);
+        alert(`Welcome, ${username}! You are now registered and logged in.`);
+
+        // Redirect to the home page
+        window.location.href = 'HTML/home_page.html';
+
     });
 
     // Toggle between login and registration forms
