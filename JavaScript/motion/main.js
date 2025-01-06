@@ -31,6 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
             figure.velocity.y = -figure.jumpStrength; // Apply jump strength
             currentAction = 'jump';
         }
+        else if (event.code === 'ArrowDown') {
+            currentAction = 'slide';
+        }
     }
 
     function handleKeyRelease(event) {
@@ -80,4 +83,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Add tiles based on the matrix
     addTiles(matrix, tileSize);
+
+
+
+    for(let i = 0; i < cols; i++){
+       
+    }
+
+    // addCoins(matrix, tileSize);
 });

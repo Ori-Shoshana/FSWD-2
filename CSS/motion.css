@@ -31,10 +31,26 @@ body {
   /* border: #000 solid 1px; */
 }
 
+#enemy {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  margin: -5.3px;
+  z-index: 1;
+  /* border: #000 solid 1px; */
+}
+
 .tile {
   position: absolute;
   width: 32px; /* Adjust as needed */
   height: 32px; /* Adjust as needed */
+}
+
+#coin {
+  position: absolute;
+  width: 32px; /* Adjust as needed */
+  height: 32px; /* Adjust as needed */
+  z-index: 1;
 }
 
 .hearts {
