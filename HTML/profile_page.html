@@ -1,61 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Profile Page</title>
-    <link rel="stylesheet" href="/CSS/profile_page.css">
-</head>
-<body>
+    <link rel="stylesheet" href="/CSS/profile_page.css" />
+  </head>
+  <body>
     <header>
-        <h1>User Profile</h1>
+      <h1>User Profile</h1>
     </header>
     <main>
-        <section class="profile-details">
-            <h2>Profile Information</h2>
-            <table>
-                <tr>
-                    <th>Name:</th>
-                    <td id="user-name"></td>
-                </tr>
-                <tr>
-                    <th>Email:</th>
-                    <td id="user-email"></td>
-                </tr>
-            </table>
-        </section>
-        <section class="game-stats">
-            <h2>Game Statistics</h2>
-            <div class="stats-container">
-                <table>
-                    <tr>
-                        <th colspan="2">Quiz Game</th>
-                    </tr>
-                    <tr>
-                        <td>High Score:</td>
-                        <td id="quiz-high-score"></td>
-                    </tr>
-                    <tr>
-                        <td>Best Time:</td>
-                        <td id="quiz-best-time"></td>
-                    </tr>
-                </table>
-                <table>
-                    <tr>
-                        <th colspan="2">Motion Game</th>
-                    </tr>
-                    <tr>
-                        <td>High Score:</td>
-                        <td id="motion-high-score"></td>
-                    </tr>
-                    <tr>
-                        <td>Best Time:</td>
-                        <td id="motion-best-time"></td>
-                    </tr>
-                </table>
-            </div>
-        </section>
+      <section class="profile-details">
+        <h2>Profile Information</h2>
+        <table>
+          <tr>
+            <th>Name:</th>
+            <td id="user-name"></td>
+          </tr>
+          <tr>
+            <th>Email:</th>
+            <td id="user-email"></td>
+          </tr>
+        </table>
+      </section>
+      <section class="game-stats">
+        <h2>Game Statistics</h2>
+        <div class="stats-container">
+          <table>
+            <tr>
+              <th colspan="2">Quiz Game</th>
+            </tr>
+            <tr>
+              <td>High Score:</td>
+              <td id="quiz-high-score"></td>
+            </tr>
+            <tr>
+              <td>Best Time:</td>
+              <td id="quiz-best-time"></td>
+            </tr>
+          </table>
+          <table>
+            <tr>
+              <th colspan="2">Motion Game</th>
+            </tr>
+            <tr>
+              <td>High Score:</td>
+              <td id="motion-high-score"></td>
+            </tr>
+            <tr>
+              <td>Best Time:</td>
+              <td id="motion-best-time"></td>
+            </tr>
+          </table>
+        </div>
+      </section>
+
+      <!-- Insert after the existing tables in the stats-container div -->
+
+      <table>
+        <tr>
+          <th colspan="3">Quiz Game Leaderboard</th>
+        </tr>
+        <tr>
+          <th>User Name</th>
+          <th>Score</th>
+          <th>Time</th>
+        </tr>
+        <tbody id="quiz-leaderboard">
+          <!-- Leaderboard entries will be dynamically inserted here -->
+        </tbody>
+      </table>
+      <table>
+        <tr>
+          <th colspan="3">Motion Game Leaderboard</th>
+        </tr>
+        <tr>
+          <th>User Name</th>
+          <th>Score</th>
+          <th>Time</th>
+        </tr>
+        <tbody id="motion-leaderboard">
+          <!-- Leaderboard entries will be dynamically inserted here -->
+        </tbody>
+      </table>
     </main>
     <script src="/JavaScript/profile_page.js"></script>
-</body>
+  </body>
 </html>
