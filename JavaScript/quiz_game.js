@@ -429,12 +429,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (loggedInUser) {
       if (!userStats[loggedInUser]) {
         userStats[loggedInUser] = {
+          totalScore: 0,
           quizGame: { score: 0, highScore: 0 },
           motionGame: { score: 0, highScore: 0 },
         };
       }
 
-      userStats[loggedInUser].quizGame.score = parseInt(scoreDisplay.textContent); // Assuming currentScore is defined
+      userStats[loggedInUser].quizGame.score = parseInt(
+        scoreDisplay.textContent
+      ); // Assuming currentScore is defined
       if (
         userStats[loggedInUser].quizGame.highScore <
         userStats[loggedInUser].quizGame.score
@@ -443,6 +446,9 @@ document.addEventListener("DOMContentLoaded", () => {
           userStats[loggedInUser].quizGame.score;
         userStats[loggedInUser].quizGame.bestTime = elapsedTime;
       }
+      userStats[loggedInUser].totalScore +=
+        userStats[loggedInUser].quizGame.score;
+      userStats[loggedInUser].lastPlayed = "finished Quiz Game at " + new Date().toLocaleString();
 
       localStorage.setItem("userStats", JSON.stringify(userStats));
     }

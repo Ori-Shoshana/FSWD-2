@@ -72,12 +72,16 @@ function UpdateLocalStorage()
    if (loggedInUser) {
      if (!userStats[loggedInUser]) {
        userStats[loggedInUser] = {
+        totalScore: 0,
          quizGame: { score: 0, highScore: 0 },
          motionGame: { score: 0, highScore: 0 }
+
        };
      }
  
      userStats[loggedInUser].motionGame.score = currentScore; // Assuming currentScore is defined
+     userStats[loggedInUser].totalScore += currentScore;
+     userStats[loggedInUser].lastPlayed = "finished motion game at "+new Date().toLocaleString();
      if(userStats[loggedInUser].motionGame.highScore < userStats[loggedInUser].motionGame.score)
      {
        userStats[loggedInUser].motionGame.highScore = userStats[loggedInUser].motionGame.score;
