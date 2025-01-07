@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let userStats = JSON.parse(localStorage.getItem(USER_STATS_KEY)) || {};
     if (loggedInUser && !userStats[loggedInUser]) {
         userStats[loggedInUser] = {
-            quizGame: { score: 0, highScore: 0 },
+            quizGame: { score: 0, highScore: 0 , bestTime: 0},
             motionGame: { score: 0, highScore: 0, level: 1, time: 0 }
         };
         localStorage.setItem(USER_STATS_KEY, JSON.stringify(userStats));
