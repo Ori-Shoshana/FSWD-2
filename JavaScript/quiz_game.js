@@ -380,74 +380,34 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function showResultModal() {
-    UpdateLocalStorage();
-    // Clear quiz container
-    questionContainer.innerHTML = "";
-    answersContainer.innerHTML = "";
-
-    // Create result modal
     const resultModal = document.createElement("div");
-    resultModal.style.position = "fixed";
-    resultModal.style.top = "40%"; // Adjusted top position for higher placement
-    resultModal.style.left = "50%";
-    resultModal.style.transform = "translate(-50%, -50%)";
-    resultModal.style.background = "white";
-    resultModal.style.padding = "20px";
-    resultModal.style.borderRadius = "10px";
-    resultModal.style.boxShadow = "0px 4px 8px rgba(0, 0, 0, 0.3)";
-    resultModal.style.textAlign = "center";
-    resultModal.id = "result-modal"; // Assign an ID for easy removal
+    resultModal.className = "result-modal"; // Use CSS class
 
-    // Display result
     const resultText = document.createElement("h2");
     resultText.textContent = `Quiz Finished! Your score is ${score}.`;
     resultModal.appendChild(resultText);
 
-    // Back to Main Page button
     const backButton = document.createElement("button");
     backButton.textContent = "Back to Main Page";
-    backButton.style.margin = "10px";
-    backButton.style.padding = "10px 20px";
-    backButton.style.borderRadius = "5px";
-    backButton.style.border = "none";
-    backButton.style.cursor = "pointer";
-    backButton.style.background = "#007BFF";
-    backButton.style.color = "white";
     backButton.addEventListener("click", () => {
       window.location.href = "/HTML/home_page.html";
     });
     resultModal.appendChild(backButton);
 
-    // Reload Quiz button
     const reloadButton = document.createElement("button");
     reloadButton.textContent = "Reload Quiz";
-    reloadButton.style.margin = "10px";
-    reloadButton.style.padding = "10px 20px";
-    reloadButton.style.borderRadius = "5px";
-    reloadButton.style.border = "none";
-    reloadButton.style.cursor = "pointer";
-    reloadButton.style.background = "#28A745";
-    reloadButton.style.color = "white";
     reloadButton.addEventListener("click", () => {
-      // Reset quiz state
       score = 0;
       currentQuestionIndex = 0;
-      scoreDisplay.textContent = score;
       selectedQuestions = getQuizQuestions();
-      startTime = new Date().getTime(); // Reset the timer
-
-      // Remove modal from DOM
-      const modal = document.getElementById("result-modal");
-      if (modal) modal.remove();
-
-      // Load the first question
       loadQuestion();
+      resultModal.remove();
     });
     resultModal.appendChild(reloadButton);
 
-    // Append modal to quiz container
     quizContainer.appendChild(resultModal);
   }
+
 
   loadQuestion();
 
