@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('quiz-best-time').textContent = userStats[loggedInUser].quizGame.bestTime || 'N/A';
 
       document.getElementById('motion-high-score').textContent = userStats[loggedInUser].motionGame.highScore;
-      document.getElementById('motion-best-time').textContent = userStats[loggedInUser].motionGame.bestTime || 'N/A';
+      document.getElementById('motion-best-time').textContent = userStats[loggedInUser].motionGame.time || 'N/A';
   } else {
       window.location.href = '/index.html'; // Redirect if no user is logged in
   }

@@ -263,6 +263,7 @@ class Figure {
       )
     ) {
       if (!removeHeart()) {
+        UpdateLocalStorage();
         indexlevel = 1;
         initializeGame(indexlevel);
       }
@@ -271,8 +272,17 @@ class Figure {
     }
     // Check if the figure is out of the right side of the container
     // meaning he has reached the end of the level
-    if (!(this.position.left <= containerWidth)) {
+    if (!(this.position.left <= containerWidth) && indexlevel < 3) {
       initializeGame(++indexlevel);
+      this.resetFigurePosition();
+    } else if (!(this.position.left <= containerWidth) && indexlevel === 3) {
+      // End of the game
+      alert("Congratulations! You have completed the game.");
+      UpdateLocalStorage();
+      indexlevel = 1;
+      initializeGame(indexlevel);
+      const scoreElement = document.getElementById("score");
+      scoreUpdate(0, scoreElement);
       this.resetFigurePosition();
     }
   }

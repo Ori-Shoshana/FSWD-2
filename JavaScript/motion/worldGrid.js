@@ -2,6 +2,8 @@ const platforms = []; // Define the platforms array
 const coins = []; // Define the coins array
 const levelStack = []; // this will be used to keep track of the levels state when the player goes to the next level
 let indexlevel = 1; // this will be used to keep track of the current level
+let startTime;
+let currentScore = 0;
 
 // Function to create a dynamic matrix based on the game container's dimensions
 function createDynamicMatrix(containerWidth, containerHeight) {
@@ -90,10 +92,16 @@ function removeCoin(coinElement) {
 
 function scoreUpdate(score, scoreElement) {
   scoreElement.textContent = "Score: " + score;
+  currentScore = score;
 }
 
 function InitializeHearts() {
   const hearts = document.getElementById("hearts");
+  // clean all the hearts if there are any
+  while (hearts.firstChild) {
+    hearts.removeChild(hearts.firstChild);
+  }
+  // add 3 hearts
   for (let i = 0; i < 3; i++) {
     const heartElement = document.createElement("img");
     heartElement.src = "/Media/Animation 128 x 128.gif";
@@ -256,10 +264,18 @@ function createLevelTwo(matrix, tileSize, rows, cols) {
   // Add tiles based on the matrix
   addTiles(matrix, tileSize);
 
-  // an arch of coins
-  for (let i = 7; i < cols - 6; i++) {
-    matrix[rows - 5][i] = -1;
-  }
+  // for an arch of coins we need to add the coins in a circular pattern
+  matrix[rows - 5][14] = -1;
+  matrix[rows - 6][15] = -1;
+  matrix[rows - 7][16] = -1;
+  matrix[rows - 7][17] = -1;
+  matrix[rows - 6][18] = -1;
+
+  matrix[rows - 4][3] = -1;
+  matrix[rows - 5][4] = -1;
+  matrix[rows - 6][5] = -1;
+  matrix[rows - 6][6] = -1;
+  matrix[rows - 5][7] = -1;
 
   addCoins(matrix, tileSize);
 }
@@ -274,50 +290,46 @@ function createLevelThree(matrix, tileSize, rows, cols) {
   }
   matrix[rows - 2][3] = 3;
   matrix[rows - 1][3] = 14;
-  
-  
-    matrix[rows - 1][6] = 11;
-    matrix[rows - 2][6] = 11;
-    matrix[rows - 3][6] = 11;
-    matrix[rows - 4][6] = 1;
 
-    matrix[rows - 1][7] = 13;
-    matrix[rows - 2][7] = 13;
-    matrix[rows - 3][7] = 13;
-    matrix[rows - 4][7] = 3;
-  
+  matrix[rows - 1][6] = 11;
+  matrix[rows - 2][6] = 11;
+  matrix[rows - 3][6] = 11;
+  matrix[rows - 4][6] = 1;
 
-    matrix[rows - 1][10] = 11;
-    matrix[rows - 2][10] = 11;
-    matrix[rows - 3][10] = 11;
-    matrix[rows - 4][10] = 11;
-    matrix[rows - 5][10] = 11;
-    matrix[rows - 6][10] = 1;
+  matrix[rows - 1][7] = 13;
+  matrix[rows - 2][7] = 13;
+  matrix[rows - 3][7] = 13;
+  matrix[rows - 4][7] = 3;
 
+  matrix[rows - 1][10] = 11;
+  matrix[rows - 2][10] = 11;
+  matrix[rows - 3][10] = 11;
+  matrix[rows - 4][10] = 11;
+  matrix[rows - 5][10] = 11;
+  matrix[rows - 6][10] = 1;
 
-    matrix[rows - 1][11] = 12;
-    matrix[rows - 2][11] = 12;
-    matrix[rows - 3][11] = 12;
-    matrix[rows - 4][11] = 12;
-    matrix[rows - 5][11] = 12;
-    matrix[rows - 6][11] = 2;
+  matrix[rows - 1][11] = 12;
+  matrix[rows - 2][11] = 12;
+  matrix[rows - 3][11] = 12;
+  matrix[rows - 4][11] = 12;
+  matrix[rows - 5][11] = 12;
+  matrix[rows - 6][11] = 2;
 
-    matrix[rows - 1][12] = 13;
-    matrix[rows - 2][12] = 13;
-    matrix[rows - 3][12] = 13;
-    matrix[rows - 4][12] = 13;
-    matrix[rows - 5][12] = 13;
-    matrix[rows - 6][12] = 3;
+  matrix[rows - 1][12] = 13;
+  matrix[rows - 2][12] = 13;
+  matrix[rows - 3][12] = 13;
+  matrix[rows - 4][12] = 13;
+  matrix[rows - 5][12] = 13;
+  matrix[rows - 6][12] = 3;
 
-    matrix[rows - 1][15] = 11;
-    matrix[rows - 2][15] = 11;
-    matrix[rows - 3][15] = 11;
-    matrix[rows - 4][15] = 11;
-    matrix[rows - 5][15] = 11;
-    matrix[rows - 6][15] = 11;
-    matrix[rows - 7][15] = 11;
-    matrix[rows - 8][15] = 1;
-
+  matrix[rows - 1][15] = 11;
+  matrix[rows - 2][15] = 11;
+  matrix[rows - 3][15] = 11;
+  matrix[rows - 4][15] = 11;
+  matrix[rows - 5][15] = 11;
+  matrix[rows - 6][15] = 11;
+  matrix[rows - 7][15] = 11;
+  matrix[rows - 8][15] = 1;
 
   for (let i = 16; i < 20; i++) {
     matrix[rows - 1][i] = 12;
@@ -333,13 +345,21 @@ function createLevelThree(matrix, tileSize, rows, cols) {
     matrix[7][cols - i] = 2;
   }
 
-  
-
   addTiles(matrix, tileSize);
 
-  for (let i = 7; i < cols - 6; i++) {
-    matrix[rows - 5][i] = -1;
-  }
+  // for an arch of coins we need to add the coins in a circular pattern
+
+  matrix[rows - 4][2] = -1;
+  matrix[rows - 5][3] = -1;
+  matrix[rows - 6][4] = -1;
+  matrix[rows - 6][5] = -1;
+  matrix[rows - 5][6] = -1;
+
+  matrix[rows - 8][11] = -1;
+  matrix[rows - 9][12] = -1;
+  matrix[rows - 10][13] = -1;
+  matrix[rows - 10][14] = -1;
+  matrix[rows - 9][15] = -1;
 
   addCoins(matrix, tileSize);
 }
@@ -349,16 +369,19 @@ function initializeGame(levelIndex) {
   const containerWidth = gameContainer.clientWidth;
   const containerHeight = gameContainer.clientHeight;
 
+  // Reset the keys object
   // Create a dynamic matrix based on the game container's dimensions
   const { matrix, tileSize, rows, cols } = createDynamicMatrix(
     containerWidth,
     containerHeight
   );
+  currentAction = "idle";
 
   cleanGameBoard(levelIndex - 1);
 
   switch (levelIndex) {
     case 1:
+      startTime = new Date().getTime();
       createLevelOne(matrix, tileSize, rows, cols);
       break;
     case 2:

@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     comingSoonButtons.forEach(button => {
         button.addEventListener('click', () => {
-            showComingSoonMessage('This game is currently under development. Stay tuned!');
+            showComingSoonMessage('Coming Soon!');
         });
     });
 
@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
             comingSoonMessage.classList.add('hidden');
         }, 2500);
     }
+
     const LOGGED_IN_USER_KEY = 'loggedInUser';
     const USER_STATS_KEY = 'userStats';
 
@@ -48,20 +49,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const loggedInUser = localStorage.getItem(LOGGED_IN_USER_KEY);
     const userNameElement = document.getElementById('user-name'); // Safely get the user-name element
 
-    if (userNameElement) { // Check if the element exists
-        if (loggedInUser) {
-            userNameElement.textContent = loggedInUser;
-        } else {
-            window.location.href = '/index.html'; // Redirect if no user is logged in
-        }
+    if (userNameElement && loggedInUser) {
+        userNameElement.textContent = loggedInUser;
     }
 
     // Initialize user statistics if not present
     let userStats = JSON.parse(localStorage.getItem(USER_STATS_KEY)) || {};
-    if (!userStats[loggedInUser]) {
+    if (loggedInUser && !userStats[loggedInUser]) {
         userStats[loggedInUser] = {
             quizGame: { score: 0, highScore: 0 },
-            motionGame: { score: 0, highScore: 0 }
+            motionGame: { score: 0, highScore: 0, level: 1, time: 0 }
         };
         localStorage.setItem(USER_STATS_KEY, JSON.stringify(userStats));
     }

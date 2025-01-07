@@ -57,3 +57,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initializeGame(indexlevel);
 });
+
+
+function UpdateLocalStorage()
+{
+   // Pause the timer
+   const endTime = new Date().getTime();
+   const elapsedTime = new Date((endTime - startTime)).toISOString().substr(11, 8);; // Convert to seconds
+ 
+   // Insert into the local storage
+   const loggedInUser = localStorage.getItem('loggedInUser');
+   const userStats = JSON.parse(localStorage.getItem('userStats')) || {};
+ 
+   if (loggedInUser) {
+     if (!userStats[loggedInUser]) {
+       userStats[loggedInUser] = {
+         quizGame: { score: 0, highScore: 0 },
+         motionGame: { score: 0, highScore: 0 }
+       };
+     }
+ 
+     userStats[loggedInUser].motionGame.score = currentScore; // Assuming currentScore is defined
+     if(userStats[loggedInUser].motionGame.highScore < userStats[loggedInUser].motionGame.score)
+     {
+       userStats[loggedInUser].motionGame.highScore = userStats[loggedInUser].motionGame.score;
+     }
+     userStats[loggedInUser].motionGame.level = indexlevel;
+     userStats[loggedInUser].motionGame.time = elapsedTime 
+ 
+     localStorage.setItem('userStats', JSON.stringify(userStats));
+   }
+}

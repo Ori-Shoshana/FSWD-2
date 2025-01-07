@@ -11,6 +11,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background-image: url("/Media/free-swamp-game-tileset-pixel-art/2 Background/Dungeon_brick_wall_grey.png.png")
 }
 
 #game-container {
@@ -77,6 +78,6 @@ body {
   right: 10px;
   font-size: 24px;
   font-weight: bold;
-  color: #000000; /* Black */
+  color: white;
   z-index: 2;
 }
