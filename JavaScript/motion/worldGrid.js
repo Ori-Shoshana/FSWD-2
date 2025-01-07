@@ -29,7 +29,10 @@ function addTiles(matrix, tileSize) {
     row.forEach((tile, colIndex) => {
       if (tile !== 0) {
         const tileElement = document.createElement("img");
-        tileElement.src = `/Media/free-swamp-game-tileset-pixel-art/1 Tiles/Tile_0${tile}.png`;
+        tileElement.src =
+          `/Media/free-swamp-game-tileset-pixel-art/1 Tiles/Tile_` +
+          String(tile).padStart(2, "0") +
+          ".png";
         tileElement.className = "tile";
         tileElement.style.position = "absolute";
         tileElement.style.width = `${tileSize}px`;
@@ -160,17 +163,38 @@ function reloadGameBoard(levelIndex) {
 function createLevelOne(matrix, tileSize, rows, cols) {
   for (let i = 0; i < cols; i++) {
     // ground
-    for (let i = 0; i < 15; i++) {
-      matrix[rows - 1][i] = 1;
-      matrix[rows - 2][i] = 1;
+
+    for (let i = 0; i < 14; i++) {
+      matrix[rows - 1][i] = 12;
     }
-    for (let i = 5; i < rows; i++) {
-      matrix[rows - 4][i] = 1;
-      matrix[rows - 3][i] = 1;
+    for (let i = 0; i < 5; i++) {
+      matrix[rows - 2][i] = 2;
     }
+
+    for (let i = 6; i < 14; i++) {
+      matrix[rows - 2][i] = 12;
+    }
+    matrix[rows - 1][14] = 13;
+    matrix[rows - 2][14] = 13;
+    matrix[rows - 2][5] = 26;
+    matrix[rows - 3][5] = 11;
+    matrix[rows - 4][5] = 1;
+
+    for (let i = 6; i < 14; i++) {
+      matrix[rows - 4][i] = 25;
+      matrix[rows - 3][i] = 12;
+    }
+
+    matrix[rows - 3][14] = 13;
+    matrix[rows - 4][14] = 3;
     // vertical wall
-    for (let i = 10; i < rows; i++) {
-      matrix[i][cols - 1] = 1;
+    for (let i = 11; i < rows; i++) {
+      matrix[i][cols - 1] = 12;
+      matrix[i][cols - 2] = 11;
+    }
+
+    for (let i = 10; i < rows - 4; i++) {
+      matrix[i][cols - 1] = 2;
       matrix[i][cols - 2] = 1;
     }
   }
@@ -189,19 +213,42 @@ function createLevelOne(matrix, tileSize, rows, cols) {
 function createLevelTwo(matrix, tileSize, rows, cols) {
   for (let i = 0; i < cols; i++) {
     // ground
-    for (let i = 0; i < 15; i++) {
-      matrix[rows - 1][i] = 1;
-      matrix[rows - 2][i] = 1;
 
-      matrix[rows - 9][i] = 1;
+    for (let i = 0; i < 14; i++) {
+      matrix[rows - 1][i] = 12;
     }
-    for (let i = 5; i < rows; i++) {
-      matrix[rows - 4][i] = 1;
-      matrix[rows - 3][i] = 1;
+    for (let i = 0; i < 5; i++) {
+      matrix[rows - 2][i] = 2;
     }
+
+    for (let i = 0; i < 15; i++) {
+      matrix[rows - 9][i] = 9;
+    }
+
+    for (let i = 6; i < 14; i++) {
+      matrix[rows - 2][i] = 12;
+    }
+    matrix[rows - 1][14] = 13;
+    matrix[rows - 2][14] = 13;
+    matrix[rows - 2][5] = 26;
+    matrix[rows - 3][5] = 11;
+    matrix[rows - 4][5] = 1;
+
+    for (let i = 6; i < 14; i++) {
+      matrix[rows - 4][i] = 25;
+      matrix[rows - 3][i] = 12;
+    }
+
+    matrix[rows - 3][14] = 13;
+    matrix[rows - 4][14] = 3;
     // vertical wall
-    for (let i = 10; i < rows; i++) {
-      matrix[i][cols - 1] = 1;
+    for (let i = 11; i < rows; i++) {
+      matrix[i][cols - 1] = 12;
+      matrix[i][cols - 2] = 11;
+    }
+
+    for (let i = 10; i < rows - 4; i++) {
+      matrix[i][cols - 1] = 2;
       matrix[i][cols - 2] = 1;
     }
   }
@@ -209,12 +256,92 @@ function createLevelTwo(matrix, tileSize, rows, cols) {
   // Add tiles based on the matrix
   addTiles(matrix, tileSize);
 
+  // an arch of coins
   for (let i = 7; i < cols - 6; i++) {
     matrix[rows - 5][i] = -1;
   }
 
   addCoins(matrix, tileSize);
-  InitializeHearts();
+}
+
+function createLevelThree(matrix, tileSize, rows, cols) {
+  // ground
+  matrix[rows - 2][0] = 2;
+  matrix[rows - 1][0] = 12;
+  for (let i = 1; i < 3; i++) {
+    matrix[rows - 1][i] = 12;
+    matrix[rows - 2][i] = 2;
+  }
+  matrix[rows - 2][3] = 3;
+  matrix[rows - 1][3] = 14;
+  
+  
+    matrix[rows - 1][6] = 11;
+    matrix[rows - 2][6] = 11;
+    matrix[rows - 3][6] = 11;
+    matrix[rows - 4][6] = 1;
+
+    matrix[rows - 1][7] = 13;
+    matrix[rows - 2][7] = 13;
+    matrix[rows - 3][7] = 13;
+    matrix[rows - 4][7] = 3;
+  
+
+    matrix[rows - 1][10] = 11;
+    matrix[rows - 2][10] = 11;
+    matrix[rows - 3][10] = 11;
+    matrix[rows - 4][10] = 11;
+    matrix[rows - 5][10] = 11;
+    matrix[rows - 6][10] = 1;
+
+
+    matrix[rows - 1][11] = 12;
+    matrix[rows - 2][11] = 12;
+    matrix[rows - 3][11] = 12;
+    matrix[rows - 4][11] = 12;
+    matrix[rows - 5][11] = 12;
+    matrix[rows - 6][11] = 2;
+
+    matrix[rows - 1][12] = 13;
+    matrix[rows - 2][12] = 13;
+    matrix[rows - 3][12] = 13;
+    matrix[rows - 4][12] = 13;
+    matrix[rows - 5][12] = 13;
+    matrix[rows - 6][12] = 3;
+
+    matrix[rows - 1][15] = 11;
+    matrix[rows - 2][15] = 11;
+    matrix[rows - 3][15] = 11;
+    matrix[rows - 4][15] = 11;
+    matrix[rows - 5][15] = 11;
+    matrix[rows - 6][15] = 11;
+    matrix[rows - 7][15] = 11;
+    matrix[rows - 8][15] = 1;
+
+
+  for (let i = 16; i < 20; i++) {
+    matrix[rows - 1][i] = 12;
+    matrix[rows - 2][i] = 12;
+    matrix[rows - 3][i] = 12;
+    matrix[rows - 4][i] = 12;
+    matrix[rows - 5][i] = 12;
+    matrix[rows - 6][i] = 12;
+    matrix[rows - 7][i] = 12;
+  }
+
+  for (let i = 1; i < 5; i++) {
+    matrix[7][cols - i] = 2;
+  }
+
+  
+
+  addTiles(matrix, tileSize);
+
+  for (let i = 7; i < cols - 6; i++) {
+    matrix[rows - 5][i] = -1;
+  }
+
+  addCoins(matrix, tileSize);
 }
 
 function initializeGame(levelIndex) {
@@ -236,6 +363,9 @@ function initializeGame(levelIndex) {
       break;
     case 2:
       createLevelTwo(matrix, tileSize, rows, cols);
+      break;
+    case 3:
+      createLevelThree(matrix, tileSize, rows, cols);
       break;
     default:
       break;

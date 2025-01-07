@@ -258,38 +258,26 @@ class Figure {
     if (
       !(
         this.position.top + this.height >= 0 &&
-        this.position.top <= containerHeight + this.height
+        this.position.top <= containerHeight + this.height &&
+        this.position.left + this.width >= 0
       )
     ) {
       if (!removeHeart()) {
-        initializeGame(1);
+        indexlevel = 1;
+        initializeGame(indexlevel);
       }
       this.resetFigurePosition();
       return false;
-    }
-    // Check if the figure is out of the left side of the container
-    if (!(this.position.left + this.width >= 0)) {
-      // if it's the first level, reset the game and decrease the number of hearts
-      if (indexlevel === 1) {
-        if (!removeHeart()) {
-          initializeGame(1);
-        }
-        this.resetFigurePosition();
-        return false;
-      } // else reload the game board with the previous level
-      else {
-        reloadGameBoard(--indexlevel);
-      }
     }
     // Check if the figure is out of the right side of the container
     // meaning he has reached the end of the level
     if (!(this.position.left <= containerWidth)) {
       initializeGame(++indexlevel);
-      this.resetFigurePosition(this.position.left, this.position.top);
+      this.resetFigurePosition();
     }
   }
 
-  resetFigurePosition(left = 50, top = 130) {
+  resetFigurePosition({ left = 50, top = 130 } = {}) {
     // Reset the figure's position to a default location within the game container
     this.setPosition(left, top); // Example default position
     this.velocity = { x: 0, y: 0 }; // Reset velocity
