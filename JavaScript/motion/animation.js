@@ -47,7 +47,19 @@ function updateFigureAnimation() {
 
 // Smoothly handle updates with a shorter interval for responsive animation
 // setInterval(updateFigureAnimation, 100);
-requestAnimationFrame(updateFigureAnimation);
+// requestAnimationFrame(updateFigureAnimation);
+
+draw(updateFigureAnimation);
+
+
+
+function draw() {
+  const fps = 60;
+  setTimeout(function() {
+    requestAnimationFrame(draw);
+    updateFigureAnimation();
+  }, 1000 / fps);
+}
 
 
 
@@ -74,8 +86,9 @@ function updateEnemyAnimation() {
   enemy.style.transform = enemyDirection === "right" ? "scaleX(1)" : "scaleX(-1)";
 }
 
-//setInterval(updateEnemyAnimation, 100);
-requestAnimationFrame(updateEnemyAnimation);
+setInterval(updateEnemyAnimation, 100);
+// requestAnimationFrame(updateEnemyAnimation);
+// draw(updateEnemyAnimation);
 
 
 // Coin Animation
@@ -101,5 +114,6 @@ function updateCoinAnimation() {
   }
 }
 
-// setInterval(updateCoinAnimation, 100);
-requestAnimationFrame(updateCoinAnimation);
+setInterval(updateCoinAnimation, 100);
+// requestAnimationFrame(updateCoinAnimation);
+// draw(updateCoinAnimation);

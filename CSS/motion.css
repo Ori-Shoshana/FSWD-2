@@ -29,6 +29,7 @@ body {
   height: 100px;
   margin: -5.3px;
   z-index: 1;
+  src: url("Media/Sprites/Gino Character/PNG/Idle, run, jump/idle01.png");
   /* border: #000 solid 1px; */
 }
 
