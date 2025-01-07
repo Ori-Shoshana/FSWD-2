@@ -46,20 +46,20 @@ function updateFigureAnimation() {
 }
 
 // Smoothly handle updates with a shorter interval for responsive animation
-// setInterval(updateFigureAnimation, 100);
+setInterval(updateFigureAnimation, 100);
 // requestAnimationFrame(updateFigureAnimation);
 
-draw(updateFigureAnimation);
+// draw(updateFigureAnimation);
 
 
 
-function draw() {
-  const fps = 60;
-  setTimeout(function() {
-    requestAnimationFrame(draw);
-    updateFigureAnimation();
-  }, 1000 / fps);
-}
+// function draw() {
+//   const fps = 60;
+//   setTimeout(function() {
+//     requestAnimationFrame(draw);
+//     updateFigureAnimation();
+//   }, 1000 / fps);
+// }
 
 
 
